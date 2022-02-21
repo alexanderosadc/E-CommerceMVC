@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ebay.Infrastructure.Repository
 {
-    internal class Repository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly IDbContext _context;
         private DbSet<T> _entities;

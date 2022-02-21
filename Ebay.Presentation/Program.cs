@@ -1,5 +1,7 @@
-using Ebay.Domain.Entities.Identity;
+using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.Persistance;
+using Ebay.Infrastructure.Repository;
+using Ebay.Presentation.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,9 +11,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(config => config.UseSqlServer(
     builder.Configuration.GetConnectionString("SQLServer")
     ));
-builder.Services.AddIdentity<AppUser, AppRole>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>().
     AddDefaultTokenProviders();
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.ConfigureApplicationCookie(config =>
+{
+    config.Cookie.Name = "Identity.Cookie";
+    config.LoginPath = "/Autthentification/Login";
+});
 
 builder.Services.AddControllersWithViews();
 
@@ -36,5 +46,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+// Seed the default data into the database
+IdentitySeedData.EnsurePopulatedRoles(app);
+IdentitySeedData.EnsurePopulatedUsers(app);
 
 app.Run();

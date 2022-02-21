@@ -2,12 +2,12 @@
 using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
 using Ebay.Domain.Mappings;
-using Ebay.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Ebay.Infrastructure.Persistance
 {
-    public class AppDbContext : IdentityDbContext<AppUser>, IDbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser>, IDbContext
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
 

@@ -1,5 +1,5 @@
 ﻿using Ebay.Domain.Entities.Base;
-using Ebay.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace Ebay.Domain.Entities
 {
@@ -7,7 +7,7 @@ namespace Ebay.Domain.Entities
     {
         public double TotalSum { get; set; }
         //public int AppUserId { get; set; }
-        public virtual AppUser AppUser { get; set; }
+        public virtual IdentityUser AppUser { get; set; }
         public int CartItemId { get; set; }
         public virtual CartItem CartItem { get; set; }
     }

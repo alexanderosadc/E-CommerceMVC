@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Ebay.Domain.Mappings
 {
-    public class UserCartMapping
+    public class PhotoMapping
     {
-        public UserCartMapping(EntityTypeBuilder<UserCart> entityTypeBuilder)
+        public PhotoMapping(EntityTypeBuilder<Photo> entityTypeBuilder)
         {
-
+            
         }
     }
 }

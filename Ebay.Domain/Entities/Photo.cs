@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace Ebay.Domain.Entities
 {
-    public class CartItem : BaseEntity
+    public class Photo : BaseEntity
     {
-        public int Quantity { get; set; }
-        public int CartId { get; set; }
-        public Cart? Cart { get; set; }
+        public string Name { get; set; }
+        public byte[] BinaryData { get; set; }
         public int ProductId { get; set; }
         public Product? Product { get; set; }
     }

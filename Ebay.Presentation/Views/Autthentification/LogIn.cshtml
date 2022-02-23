@@ -1,14 +1,10 @@
-﻿@using Ebay.Presentation.Models.ViewModels
+﻿@using Ebay.Infrastructure.ViewModels
 @model AppUserViewModel
 @{
 }
 <h1>Login Page</h1>
 <div class="m-1 p-1">
     <div class="text-danger" asp-validation-summary=All></div>
-    @if (Model.ErrorMessage != null)
-    {
-        <div class="text-danger">@Model.ErrorMessage</div>
-    }
     <form method="post" asp-controller="Autthentification" asp-action="LogIn">
         <div class="form-group">
             <label asp-for="UserName"></label>

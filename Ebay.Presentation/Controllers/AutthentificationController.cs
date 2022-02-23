@@ -1,4 +1,5 @@
-﻿using Ebay.Presentation.Models.ViewModels;
+﻿using Ebay.Domain.Entities;
+using Ebay.Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,11 +7,11 @@ namespace Ebay.Presentation.Controllers
 {
     public class AutthentificationController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
         public AutthentificationController(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+            SignInManager<User> signInManager,
+            UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -20,9 +21,9 @@ namespace Ebay.Presentation.Controllers
             return RedirectToAction(nameof(LogIn));
         }
 
-        public IActionResult LogIn(string? errorMessage = null)
+        public IActionResult LogIn()
         {
-            AppUserViewModel appUser = new AppUserViewModel() { ErrorMessage = errorMessage};
+            AppUserViewModel appUser = new AppUserViewModel();
             return View(appUser);
         }
 
@@ -32,28 +33,34 @@ namespace Ebay.Presentation.Controllers
             if(ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(username);
-                var userRole = await _userManager.IsInRoleAsync(user, "Admin");
-
-                if(userRole == true)
+                
+                if (user != null)
                 {
-                    if (user != null)
+                    var userRole = await _userManager.IsInRoleAsync(user, "Admin");
+                    if (userRole == true)
                     {
                         var signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
                         if (signInResult.Succeeded)
                         {
                             if (signInResult.Succeeded)
                             {
-                                return RedirectToAction(nameof(Index), nameof(AdminController));
+                                return RedirectToAction(nameof(Index), "Admin");
                             }
                         }
                     }
-                }
-                else
-                {
-                    return RedirectToAction(nameof(LogIn), "You do not have admin rights to enter the system");
-                }
+                    else
+                    {
+                        ModelState.AddModelError("", "You do not have admin rights to enter the system");
+                    }
+                } 
             }
             return RedirectToAction(nameof(LogIn));
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

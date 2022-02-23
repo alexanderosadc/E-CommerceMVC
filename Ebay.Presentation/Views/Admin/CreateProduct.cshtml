@@ -1,0 +1,44 @@
+﻿@using Ebay.Infrastructure.ViewModels.Admin.CreateProduct
+
+@model ProductCreateViewModel
+
+<div class="text-danger" asp-validation-summary=All></div>
+<form method="post" asp-controller="Admin" asp-action="CreateProduct">
+        <div class="form-group" hidden>
+            <label>ID</label>
+            <input class="form-control" disabled asp-for=Id />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input type="text" asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <input type="text" asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="TotalQuantity"></label>
+            <input type="text" asp-for="TotalQuantity" class="form-control" />
+            <span asp-validation-for="TotalQuantity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price"></label>
+            <input type="text" asp-for="Price" class="form-control" value= />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Select Categories of Product</label>
+            <select class="dropdown-item" asp-for="CategoriesIds" asp-items=@Model.CategoryResponseItems></select>
+        </div>
+        <div>
+            <label>Select Discounts</label>
+            <select class="dropdown-item" asp-for="DiscountId" asp-items=@Model.DiscountItems></select>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+</form>

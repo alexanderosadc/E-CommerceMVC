@@ -1,15 +1,16 @@
 ﻿using Ebay.Domain.Entities.Base;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ebay.Infrastructure.Repository
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly IDbContext _context;
+        private readonly AppDbContext _context;
         private DbSet<T> _entities;
 
-        public Repository(IDbContext context)
+        public Repository(AppDbContext context)
         {
             _context = context;
             _entities = context.Set<T>();

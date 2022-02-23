@@ -7,7 +7,7 @@ namespace Ebay.Domain.Mappings
     {
         public ProductMapping(EntityTypeBuilder<Product> entityTypeBuilder)
         {
-
+            
         }
     }
 }

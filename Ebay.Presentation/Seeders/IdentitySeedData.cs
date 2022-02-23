@@ -1,4 +1,5 @@
-﻿using Ebay.Domain.Interfaces;
+﻿using Ebay.Domain.Entities;
+using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.Persistance;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -54,13 +55,13 @@ namespace Ebay.Presentation.Seeders
                 context.Database.Migrate();
             }
 
-            UserManager<IdentityUser> userManager = app.ApplicationServices
+            UserManager<User> userManager = app.ApplicationServices
                 .CreateScope().ServiceProvider
-                .GetRequiredService<UserManager<IdentityUser>>();
-            IdentityUser user = await userManager.FindByIdAsync(adminUserName);
+                .GetRequiredService<UserManager<User>>();
+            var user = await userManager.FindByIdAsync(adminUserName);
             if (user == null)
             {
-                user = new IdentityUser();
+                user = new User();
                 user.UserName = adminUserName;
                 user.Email = adminEmail;
                 user.PhoneNumber = adminPhone;

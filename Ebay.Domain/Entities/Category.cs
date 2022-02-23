@@ -1,21 +1,22 @@
-﻿
-using Ebay.Domain.Entities.Base;
+﻿using Ebay.Domain.Entities.Base;
+using Ebay.Domain.Entities.JoinTables;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Ebay.Domain.Entities
 {
     public class Category : BaseEntity
     {
-        public Category()
-        {
-            CategoryFields = new List<CategoryField>();
-            Categories = new List<Category>();
-        }
-
         public string Name { get; set; }
         public string Description { get; set; }
+
+        public IEnumerable<ProductCategory> ProductCategories { get; set; }
+
         public int? ParentId { get; set; }
-        public virtual Category Parent { get; set; }
-        public virtual ICollection<Category> Categories { get; private set; }
-        public ICollection<CategoryField> CategoryFields { get; private set; }
+        public Category? Parent { get; set; }
+        public IEnumerable<Category> Categories { get; set; }
     }
 }

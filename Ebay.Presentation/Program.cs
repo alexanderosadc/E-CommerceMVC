@@ -1,3 +1,4 @@
+using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.Persistance;
 using Ebay.Infrastructure.Repository;
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(config => config.UseSqlServer(
     builder.Configuration.GetConnectionString("SQLServer")
     ));
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>().
     AddDefaultTokenProviders();
 
@@ -45,9 +46,11 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Admin}/{action=Index}/{id?}");
+
 // Seed the default data into the database
 IdentitySeedData.EnsurePopulatedRoles(app);
 IdentitySeedData.EnsurePopulatedUsers(app);
+DbSeedData.EnsurePopulated(app);
 
 app.Run();

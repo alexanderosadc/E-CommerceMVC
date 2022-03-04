@@ -10,8 +10,8 @@
              <th>Title</th>
              <th>TotalQuantity</th>
              <th>Price</th>
-             <th>Category</th>
              <th>Discount</th>
+             <th>Category</th>
              <th>FinalPrice</th>
          </tr>
      </thead>
@@ -26,15 +26,29 @@
                     <td>@item.TotalQuantity</td>
                     <td>@item.Price.ToString("c")</td>
                     <td>
+                        @foreach(var discount in item.DiscountViews)
+                        { 
+                            <span>@discount.Name = @discount.DiscountPercent %,</span>
+                            <br />
+                        }
+                    </td>
+                    <td>
+                        @foreach(var name in item.CategoryNames)
+                        { 
+                            <span>@name,</span>
+                            <br />
+                        }
+                    </td>
+                    <td>
                         <a class="btn btn-info btn-sm" asp-controller="Admin" 
-                                asp-action="Details" 
-                                asp-route-announcementId="@item.Id">
+                                asp-action="ProductDetails" 
+                                asp-route-itemId="@item.Id">
                             Details
                         </a>
                         <a class="btn btn-info btn-sm" 
                                 asp-controller="Admin"
-                                asp-action="Edit"
-                                asp-route-announcementId="@item.Id">
+                                asp-action="EditProduct"
+                                asp-route-itemId="@item.Id">
                             Edit
                         </a>
                     </td>

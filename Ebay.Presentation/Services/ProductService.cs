@@ -1,4 +1,5 @@
 ﻿using Ebay.Domain.Entities;
+using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.Persistance;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
@@ -10,47 +11,10 @@ namespace Ebay.Presentation.Services
     public class ProductService
     {
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Discount> _discountRepository;
-        private readonly IRepository<Category> _categoryRepository;
         public ProductService(
-            IRepository<Product> productRepository,
-            IRepository<Discount> discountRepository,
-            IRepository<Category> productCategoryRepository)
+            IRepository<Product> productRepository)
         {
             _productRepository = productRepository;
-            _discountRepository = discountRepository;
-            _categoryRepository = productCategoryRepository;
-        }
-
-        public async Task CreateDropdownSelectedItems(ProductCreateViewModel productCreateViewModel)
-        {
-            productCreateViewModel.CategoryResponseItems = await CreateDropdownCategory();
-            productCreateViewModel.DiscountItems = await CreateDropdownDiscounts();
-        }
-        public async Task<List<SelectListItem>> CreateDropdownCategory()
-        {
-
-            var productCategories = await _categoryRepository.GetAll();
-            var categorySelectedItems = productCategories.Select(item => new SelectListItem
-            {
-                Text = item.Name,
-                Value = item.Id.ToString()
-            });
-
-            return categorySelectedItems.ToList();
-        }
-
-        public async Task<List<SelectListItem>> CreateDropdownDiscounts()
-        {
-
-            var productCategories = await _discountRepository.GetAll();
-            var categorySelectedItems = productCategories.Select(item => new SelectListItem
-            {
-                Text = item.Name + " = " + item.DiscountPercent.ToString() + "%",
-                Value = item.Id.ToString()
-            });
-
-            return categorySelectedItems.ToList();
         }
 
         public async Task CreateProduct(ProductCreateViewModel viewModel)
@@ -65,59 +29,87 @@ namespace Ebay.Presentation.Services
                 });
         }
 
-        private async Task<ICollection<Category>> ExtractCategories(List<string> listOfId, IRepository<Category> context)
+        public async Task<List<string>> GetCurrentProductCategoryNames(int productId)
         {
-            ICollection<Category> categories = new List<Category>();
-            if (listOfId != null)
-            {
-                foreach (var id in listOfId)
+            IEnumerable<string> categoryNames = new List<string>();
+            var product = await _productRepository.Get(productId);
+                if(product != null)
                 {
-                    var matchedCategory = await context.Get(int.Parse(id));
-                    if(matchedCategory != null)
+                    if (productId == product.Id)
                     {
-                        categories.Add(matchedCategory);
+                        categoryNames = product.ProductCategories.Select(item => item.Category.Name);
                     }
                 }
-            }
-            return categories;
+
+            return categoryNames.ToList();
         }
 
-        public async Task<IEnumerable<ProductViewModel>> GetAllProducts()
+        public async Task<List<Discount>> GetCurrentProductDiscounts(int productId)
+        {
+            IEnumerable<Discount> discounts = new List<Discount>();
+            var product = await _productRepository.Get(productId);
+            if (product != null)
+            {
+                if (productId == product.Id)
+                {
+                    discounts = product.ProductDiscounts.Select(item => item.Discount);
+                }
+            }
+
+            return discounts.ToList();
+        }
+
+        public async Task<IEnumerable<ProductViewModel>> GetAllProductsViewModel()
         {
             var products = await _productRepository.GetAll();
 
             var productViews = new List<ProductViewModel>();
+
             foreach (var item in products)
             {
                 if(item != null)
                 {
                     productViews.Add(new ProductViewModel
                     {
+                        Id = item.Id,
                         Name = item.Name,
                         Description = item.Description,
                         TotalQuantity = item.Quantity,
                         Price = item.Price,
-                        discountPercentages = await GetDiscountPercentage(),
-                        CategoryNames = await GetCategoryNames()
                     });
                 }
             }
+            return productViews;
+        }
+
+        public async Task<IEnumerable<ProductCreateViewModel>> GetAllProductsCreateViewModel()
+        {
+            var products = await _productRepository.GetAll();
+
+            var productViews = products.Select(item => new ProductCreateViewModel
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description,
+                TotalQuantity = item.Quantity,
+                Price = item.Price,
+            });
 
             return productViews;
         }
 
-        private async Task<List<int>> GetDiscountPercentage()
+        public async Task<ProductCreateViewModel> GetProductCreateViewModelById(int id)
         {
-            IEnumerable<Discount> discount = await _discountRepository.GetAll();
-            List<int> discountPercentages = discount.Select(item => item.DiscountPercent).ToList();
-            return discountPercentages;
-        }
-
-        private async Task<List<string>> GetCategoryNames()
-        {
-            IEnumerable<Category> category = await _categoryRepository.GetAll();
-            List<string> categoryNames = category.Select(item => item.Name).ToList();
-            return categoryNames;
+            var product = await _productRepository.Get(id);
+            var productCreateView = new ProductCreateViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                TotalQuantity = product.Quantity,
+                Price = product.Price,
+            };
+            return productCreateView;
         }
     }
 }

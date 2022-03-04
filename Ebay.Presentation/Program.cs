@@ -8,8 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Add builder class
+// Add region in builder class
+
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(config => config.UseSqlServer(
+builder.Services.AddDbContext<AppDbContext>(config => config
+.UseLazyLoadingProxies()
+.UseSqlServer(
     builder.Configuration.GetConnectionString("SQLServer")
     ));
 builder.Services.AddIdentity<User, IdentityRole>()

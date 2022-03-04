@@ -2,23 +2,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Ebay.Domain.Entities;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
-using Ebay.Presentation.Services;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
+using Ebay.Domain.Entities.JoinTables;
+using Ebay.Presentation.Business_Logic;
 
 namespace Ebay.Presentation.Controllers
 {
     public class AdminController : Controller
     {
-        // Repository Declaration
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<CartItem> _cartItemRepository;
-        private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<Photo> _photoRepository;
-        private readonly IRepository<Discount> _discountRepository;
-        private readonly IRepository<Cart> _CartRepository;
-
+        private readonly AdminBusinessLogic _adminBusinessLogic;
         // Services declaration
-        ProductService _productService;
 
         public AdminController(
             IRepository<Product> productRepository,
@@ -26,40 +19,45 @@ namespace Ebay.Presentation.Controllers
             IRepository<Category> categoryRepository,
             IRepository<Photo> photoRepository,
             IRepository<Discount> discountRepository,
-            IRepository<Cart> CartRepository
+            IRepository<Cart> cartRepository
             )
         {
-            _productRepository = productRepository;
-            _cartItemRepository = cartItemRepository;
-            _categoryRepository = categoryRepository;
-            _photoRepository = photoRepository;
-            _discountRepository = discountRepository;
-            _CartRepository = CartRepository;
-
-            _productService = new ProductService(_productRepository, _discountRepository, _categoryRepository);
+            _adminBusinessLogic = new AdminBusinessLogic(
+                productRepository,
+                cartItemRepository,
+                categoryRepository,
+                photoRepository,
+                discountRepository,
+                cartRepository
+                );
         }
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ProductViewModel> products = await _productService.GetAllProducts();
+            IEnumerable<ProductViewModel> products = await _adminBusinessLogic.GetIndexView();
             return View(products);
         }
 
         public async Task<IActionResult> CreateProduct()
         {
-            var viewProduct = new ProductCreateViewModel();
-            await _productService.CreateDropdownSelectedItems(viewProduct);
-            return View(viewProduct);
+            var product = await _adminBusinessLogic.GetCreateProductView();
+            return View(product);
         }
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductCreateViewModel modelView)
         {
             if(ModelState.IsValid)
             {
-                await _productService.CreateProduct(modelView);
+                await _adminBusinessLogic.PostCreateProductViewModel(modelView);
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(CreateProduct));
+        }
+
+        public async Task<IActionResult> EditProduct(int itemId)
+        {
+            var productCreateView = await _adminBusinessLogic.GetEditProductView(itemId);
+            return View(productCreateView);
         }
     }
 }

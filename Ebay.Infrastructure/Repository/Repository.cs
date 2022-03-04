@@ -40,6 +40,8 @@ namespace Ebay.Infrastructure.Repository
 
         public async Task Update(T entity)
         {
+            // Verify entity not tracked
+            _entities.Update(entity);
             await _context.SaveChangesAsync();
         }
     }

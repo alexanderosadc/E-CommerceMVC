@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ebay.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220223165700_Init")]
-    partial class Init
+    [Migration("20220304145302_ChangeToICollection")]
+    partial class ChangeToICollection
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -123,30 +123,46 @@ namespace Ebay.Infrastructure.Migrations
 
             modelBuilder.Entity("Ebay.Domain.Entities.JoinTables.ProductCategory", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId", "CategoryId");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("Ebay.Domain.Entities.JoinTables.ProductDiscount", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId", "DiscountId");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("DiscountId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductDiscounts");
                 });
@@ -190,10 +206,6 @@ namespace Ebay.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OtherDetails")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -436,8 +448,7 @@ namespace Ebay.Infrastructure.Migrations
                 {
                     b.HasOne("Ebay.Domain.Entities.Category", "Parent")
                         .WithMany("Categories")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
                 });

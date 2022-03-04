@@ -13,11 +13,11 @@ namespace Ebay.Domain.Mappings
     {
         public CategoryMapping(EntityTypeBuilder<Category> entityTypeBuilder)
         {
-            entityTypeBuilder
-                .HasMany(item => item.Categories)
-                .WithOne(item => item.Parent)
-                .HasForeignKey(item => item.ParentId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //entityTypeBuilder
+            //    .HasMany(item => item.Categories)
+            //    .WithOne(item => item.Parent)
+            //    .HasForeignKey(item => item.ParentId)
+            //    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

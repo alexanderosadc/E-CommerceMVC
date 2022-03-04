@@ -10,8 +10,8 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
         public int TotalQuantity { get; set; }
         public double Price { get; set; }
 
-        public List<string> CategoryNames;
+        public IEnumerable<string>? CategoryNames { get; set; }
 
-        public List<int> discountPercentages;
+        public IEnumerable<DiscountView>? DiscountViews { get; set; }
     }
 }

@@ -6,30 +6,30 @@
 <form method="post" asp-controller="Admin" asp-action="CreateProduct">
         <div class="form-group" hidden>
             <label>ID</label>
-            <input class="form-control" disabled asp-for=Id />
+            <input class="form-control" disabled asp-for=Id value=Id />
         </div>
 
         <div class="form-group">
             <label asp-for="Name"></label>
-            <input type="text" asp-for="Name" class="form-control" />
+            <input type="text" asp-for="Name" class="form-control" value="@Model.Name"/>
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Description"></label>
-            <textarea type="text" asp-for="Description" class="form-control" ></textarea>
+            <textarea type="text" asp-for="Description" class="form-control" value="@Model.Description" ></textarea>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="TotalQuantity"></label>
-            <input type="number" asp-for="TotalQuantity" class="form-control" />
+            <input type="number" asp-for="TotalQuantity" class="form-control" value="@Model.TotalQuantity" />
             <span asp-validation-for="TotalQuantity" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="Price"></label>
-            <input type="number" asp-for="Price" class="form-control" value= />
+            <input type="number" asp-for="Price" class="form-control" value="@Model.Price" />
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
         <div class="form-group">

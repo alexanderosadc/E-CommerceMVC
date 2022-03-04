@@ -13,9 +13,8 @@ namespace Ebay.Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public int Quantity { get; set; }
-        public string OtherDetails { get; set; }
         public double Price { get; set; }
-        public IEnumerable<ProductCategory> ProductCategories { get; set; }
-        public IEnumerable<ProductDiscount> ProductDiscounts { get; set; }
+        public virtual ICollection<ProductCategory> ProductCategories { get; set; }
+        public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; }
     }
 }

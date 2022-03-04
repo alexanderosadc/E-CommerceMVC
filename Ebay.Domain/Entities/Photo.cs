@@ -12,6 +12,6 @@ namespace Ebay.Domain.Entities
         public string Name { get; set; }
         public byte[] BinaryData { get; set; }
         public int ProductId { get; set; }
-        public Product? Product { get; set; }
+        public virtual Product? Product { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Ebay.Domain.Entities;
+using Ebay.Domain.Entities.JoinTables;
 using Ebay.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,12 +16,13 @@ namespace Ebay.Presentation.Seeders
             {
                 context.Database.Migrate();
             }
-            ProductDiscountPopulate(context);
-            ProductCategoryPopulate(context);
+            DiscountPopulate(context);
+            CategoryPopulate(context);
 
             context.SaveChanges();
         }
-        public static void ProductDiscountPopulate(AppDbContext context)
+
+        public static void DiscountPopulate(AppDbContext context)
         {
 
             if (!context.Discounts.Any())
@@ -46,7 +48,7 @@ namespace Ebay.Presentation.Seeders
             }
         }
 
-        public static void ProductCategoryPopulate(AppDbContext context)
+        public static void CategoryPopulate(AppDbContext context)
         {
             if (!context.Categories.Any())
             {

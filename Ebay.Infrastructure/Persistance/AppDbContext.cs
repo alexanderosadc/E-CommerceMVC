@@ -33,10 +33,6 @@ namespace Ebay.Infrastructure.Persistance
             new UserMapping(modelBuilder.Entity<User>());
 
         }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<ProductDiscount> ProductDiscounts { get; set; }
-
-
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -44,6 +40,9 @@ namespace Ebay.Infrastructure.Persistance
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<ProductDiscount> ProductDiscounts { get; set; }
 
     }
 }

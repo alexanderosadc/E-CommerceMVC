@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ebay.Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,8 +53,7 @@ namespace Ebay.Infrastructure.Migrations
                         name: "FK_Categories_Categories_ParentId",
                         column: x => x.ParentId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -83,7 +82,6 @@ namespace Ebay.Infrastructure.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    OtherDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
@@ -195,12 +193,14 @@ namespace Ebay.Infrastructure.Migrations
                 name: "ProductCategories",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCategories", x => new { x.ProductId, x.CategoryId });
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ProductCategories_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -219,12 +219,14 @@ namespace Ebay.Infrastructure.Migrations
                 name: "ProductDiscounts",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DiscountId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductDiscounts", x => new { x.ProductId, x.DiscountId });
+                    table.PrimaryKey("PK_ProductDiscounts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ProductDiscounts_Discounts_DiscountId",
                         column: x => x.DiscountId,
@@ -396,9 +398,19 @@ namespace Ebay.Infrastructure.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductCategories_ProductId",
+                table: "ProductCategories",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductDiscounts_DiscountId",
                 table: "ProductDiscounts",
                 column: "DiscountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductDiscounts_ProductId",
+                table: "ProductDiscounts",
+                column: "ProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

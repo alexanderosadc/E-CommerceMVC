@@ -13,15 +13,15 @@ namespace Ebay.Domain.Mappings
         public ProductCategoryMapping(EntityTypeBuilder<ProductCategory> modelBuilder)
         {
             modelBuilder
-                .HasKey(bc => new { bc.ProductId, bc.CategoryId });
-            modelBuilder
+                .HasKey(bc => bc.Id);
+            /*modelBuilder
                 .HasOne(bc => bc.Product)
                 .WithMany(b => b.ProductCategories)
                 .HasForeignKey(bc => bc.ProductId);
             modelBuilder
                 .HasOne(bc => bc.Category)
                 .WithMany(c => c.ProductCategories)
-                .HasForeignKey(bc => bc.CategoryId);
+                .HasForeignKey(bc => bc.CategoryId);*/
         }
     }
 }

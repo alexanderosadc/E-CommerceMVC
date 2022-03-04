@@ -13,15 +13,15 @@ namespace Ebay.Domain.Mappings.JoinTables
         public ProductDiscountMapping(EntityTypeBuilder<ProductDiscount> modelBuilder)
         {
             modelBuilder
-                .HasKey(bc => new { bc.ProductId, bc.DiscountId });
-            modelBuilder
+                .HasKey(bc => bc.Id);
+            /*modelBuilder
                 .HasOne(bc => bc.Product)
                 .WithMany(b => b.ProductDiscounts)
                 .HasForeignKey(bc => bc.ProductId);
             modelBuilder
                 .HasOne(bc => bc.Discount)
                 .WithMany(c => c.ProductDiscounts)
-                .HasForeignKey(bc => bc.DiscountId);
+                .HasForeignKey(bc => bc.DiscountId);*/
         }
     }
 }

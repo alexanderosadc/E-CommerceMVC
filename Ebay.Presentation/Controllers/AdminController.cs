@@ -19,7 +19,9 @@ namespace Ebay.Presentation.Controllers
             IRepository<Category> categoryRepository,
             IRepository<Photo> photoRepository,
             IRepository<Discount> discountRepository,
-            IRepository<Cart> cartRepository
+            IRepository<Cart> cartRepository,
+            IRepository<ProductCategory> productCategoryRepository,
+            IRepository<ProductDiscount> productDiscountRepository
             )
         {
             _adminBusinessLogic = new AdminBusinessLogic(
@@ -28,7 +30,9 @@ namespace Ebay.Presentation.Controllers
                 categoryRepository,
                 photoRepository,
                 discountRepository,
-                cartRepository
+                cartRepository,
+                productCategoryRepository,
+                productDiscountRepository
                 );
         }
 

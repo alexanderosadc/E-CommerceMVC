@@ -17,11 +17,17 @@ namespace Ebay.Presentation.Services
             _productRepository = productRepository;
         }
 
+        public async Task<int> GetNumberOfRecords()
+        {
+            var products = await _productRepository.GetAll();
+            return products.AsQueryable().Count();
+        }
         public async Task CreateProduct(ProductCreateViewModel viewModel)
         {
             await _productRepository.Insert(
                 new Product 
                 {
+                    Id = viewModel.Id,
                     Name = viewModel.Name,
                     Description = viewModel.Description,
                     Quantity = viewModel.TotalQuantity,

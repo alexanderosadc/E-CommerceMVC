@@ -23,11 +23,11 @@ namespace Ebay.Infrastructure.ViewModels.Admin.CreateProduct
 
         [Required(ErrorMessage = "Please enter price per unit")]
         public double Price { get; set; }
-        public List<string> CategoriesIds { get; set; } = new List<string>();
+        public List<int> CategoriesIds { get; set; } = new List<int>();
 
         public List<SelectListItem> CategoryResponseItems = new List<SelectListItem>();
 
-        public string DiscountId { get; set; }
+        public List<int> DiscountIds { get; set; } = new List<int>();
 
         public List<SelectListItem> DiscountItems = new List<SelectListItem>();
     }

@@ -18,19 +18,26 @@ namespace Ebay.Presentation.Business_Logic
         private readonly IRepository<Photo> _photoRepository;
         private readonly IRepository<Discount> _discountRepository;
         private readonly IRepository<Cart> _cartRepository;
+        private readonly IRepository<ProductCategory> _productCategoryRepository;
+        private readonly IRepository<ProductDiscount> _productDiscountRepository;
 
 
         // Services declaration
-        ProductService _productService;
-        DiscountService _discountService;
-        CategoryService _categoryService;
+        private readonly ProductService _productService;
+        private readonly DiscountService _discountService;
+        private readonly CategoryService _categoryService;
+
+        private readonly ProductCategoryService _productCategoryService;
+        private readonly ProductDiscountService _productDiscountService;
         public AdminBusinessLogic(
             IRepository<Product> productRepository,
             IRepository<CartItem> cartItemRepository,
             IRepository<Category> categoryRepository,
             IRepository<Photo> photoRepository,
             IRepository<Discount> discountRepository,
-            IRepository<Cart> cartRepository
+            IRepository<Cart> cartRepository,
+            IRepository<ProductCategory> productCategory,
+            IRepository<ProductDiscount> productDiscount
         )
         {
             _productRepository = productRepository;
@@ -42,12 +49,17 @@ namespace Ebay.Presentation.Business_Logic
             _discountRepository = discountRepository;
             _cartRepository = cartRepository;
 
+            
+            _productCategoryRepository = productCategory;
+            _productDiscountRepository = productDiscount;
 
 
             // Create interface for each Service
             _productService = new ProductService(_productRepository);
             _discountService = new DiscountService(_discountRepository);
             _categoryService = new CategoryService(_categoryRepository);
+            _productCategoryService = new ProductCategoryService(_productCategoryRepository);
+            _productDiscountService = new ProductDiscountService(_productDiscountRepository);
         }
 
         public async Task<IEnumerable<ProductViewModel>> GetIndexView()
@@ -74,6 +86,8 @@ namespace Ebay.Presentation.Business_Logic
         public async Task<ProductCreateViewModel> GetCreateProductView()
         {
             ProductCreateViewModel productCreateViewModel = new ProductCreateViewModel();
+
+            productCreateViewModel.Id = await _productService.GetNumberOfRecords() + 1;
             productCreateViewModel.CategoryResponseItems = await _categoryService.CreateDropdownCategory();
             productCreateViewModel.DiscountItems = await _discountService.CreateDropdownDiscounts();
 
@@ -82,7 +96,32 @@ namespace Ebay.Presentation.Business_Logic
 
         public async Task PostCreateProductViewModel(ProductCreateViewModel productCreateViewModel)
         {
-            await _productService.CreateProduct(productCreateViewModel);
+
+            var categories = productCreateViewModel.CategoriesIds
+                .Select(async item => await _categoryRepository.Get(item))
+                .Select(task => task.Result)
+                .Where(category => category != null)
+                .ToList();
+            var discounts = productCreateViewModel.DiscountIds
+                .Select(async item => await _discountRepository.Get(item))
+                .Select(task => task.Result)
+                .Where(discount => discount != null)
+                .ToList();
+
+
+            var product = new Product
+            {
+                Name = productCreateViewModel.Name,
+                Description = productCreateViewModel.Description,
+                Quantity = productCreateViewModel.TotalQuantity,
+                Price = productCreateViewModel.Price,
+            };
+
+            var createdProductCategory = _productCategoryService.GetProductCategories(categories, product);
+            var createdProductDiscounts = _productDiscountService.GetProductDiscounts(discounts, product);
+            product.ProductCategories = createdProductCategory;
+            product.ProductDiscounts = createdProductDiscounts;
+            await _productRepository.Insert(product);
         }
 
         public async Task<ProductCreateViewModel> GetEditProductView(int itemId)

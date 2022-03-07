@@ -22,86 +22,20 @@ namespace Ebay.Presentation.Services
             var products = await _productRepository.GetAll();
             return products.AsQueryable().Count();
         }
-        public async Task CreateProduct(ProductCreateViewModel viewModel)
+        public Product CreateProduct(ProductCreateViewModel viewModel, bool ignoreID)
         {
-            await _productRepository.Insert(
-                new Product 
+            var product = new Product 
                 {
-                    Id = viewModel.Id,
                     Name = viewModel.Name,
                     Description = viewModel.Description,
                     Quantity = viewModel.TotalQuantity,
                     Price = viewModel.Price,
-                });
-        }
-
-        public async Task<List<string>> GetCurrentProductCategoryNames(int productId)
-        {
-            IEnumerable<string> categoryNames = new List<string>();
-            var product = await _productRepository.Get(productId);
-                if(product != null)
-                {
-                    if (productId == product.Id)
-                    {
-                        categoryNames = product.ProductCategories.Select(item => item.Category.Name);
-                    }
-                }
-
-            return categoryNames.ToList();
-        }
-
-        public async Task<List<Discount>> GetCurrentProductDiscounts(int productId)
-        {
-            IEnumerable<Discount> discounts = new List<Discount>();
-            var product = await _productRepository.Get(productId);
-            if (product != null)
+                };
+            if(ignoreID == false)
             {
-                if (productId == product.Id)
-                {
-                    discounts = product.ProductDiscounts.Select(item => item.Discount);
-                }
+                product.Id = viewModel.Id;
             }
-
-            return discounts.ToList();
-        }
-
-        public async Task<IEnumerable<ProductViewModel>> GetAllProductsViewModel()
-        {
-            var products = await _productRepository.GetAll();
-
-            var productViews = new List<ProductViewModel>();
-
-            foreach (var item in products)
-            {
-                if(item != null)
-                {
-                    productViews.Add(new ProductViewModel
-                    {
-                        Id = item.Id,
-                        Name = item.Name,
-                        Description = item.Description,
-                        TotalQuantity = item.Quantity,
-                        Price = item.Price,
-                    });
-                }
-            }
-            return productViews;
-        }
-
-        public async Task<IEnumerable<ProductCreateViewModel>> GetAllProductsCreateViewModel()
-        {
-            var products = await _productRepository.GetAll();
-
-            var productViews = products.Select(item => new ProductCreateViewModel
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Description = item.Description,
-                TotalQuantity = item.Quantity,
-                Price = item.Price,
-            });
-
-            return productViews;
+            return product;
         }
 
         public async Task<ProductCreateViewModel> GetProductCreateViewModelById(int id)
@@ -116,6 +50,20 @@ namespace Ebay.Presentation.Services
                 Price = product.Price,
             };
             return productCreateView;
+        }
+
+        public async Task<List<int>> GetSelectedCategoriesId(int productId)
+        {
+            var product = await _productRepository.Get(productId);
+            var ids = product.ProductCategories.Select(item => item.CategoryId);
+            return ids.ToList();
+        }
+
+        public async Task<List<int>> GetSelectedDiscountId(int productId)
+        {
+            var product = await _productRepository.Get(productId);
+            var ids = product.ProductDiscounts.Select(item => item.DiscountId);
+            return ids.ToList();
         }
     }
 }

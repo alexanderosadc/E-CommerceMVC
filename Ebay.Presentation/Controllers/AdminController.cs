@@ -63,5 +63,15 @@ namespace Ebay.Presentation.Controllers
             var productCreateView = await _adminBusinessLogic.GetEditProductView(itemId);
             return View(productCreateView);
         }
+
+        public async Task<IActionResult> UpdateProduct(ProductCreateViewModel modelView)
+        {
+            if (ModelState.IsValid)
+            {
+                await _adminBusinessLogic.UpdateProduct(modelView);
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(EditProduct), new {itemId = modelView.Id });
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -25,19 +26,6 @@ namespace Ebay.Presentation.Services
             };
         }
 
-        public async Task<List<DiscountView>> GetAllDiscounts()
-        {
-            IEnumerable<Discount> discount = await _discountRepository.GetAll();
-            var discountViews = discount.Select(item => new DiscountView
-            {
-                Id = item.Id,
-                Name = item.Name,
-                DiscountPercent = item.DiscountPercent,
-            });
-
-            return discountViews.ToList();
-        }
-
         public async Task<List<SelectListItem>> CreateDropdownDiscounts()
         {
             var productCategories = await _discountRepository.GetAll();
@@ -48,6 +36,15 @@ namespace Ebay.Presentation.Services
             });
 
             return categorySelectedItems.ToList();
+        }
+
+        public List<Discount> GetSelectedDiscounts(ProductCreateViewModel viewModel)
+        {
+            return viewModel.DiscountIds
+                .Select(async item => await _discountRepository.Get(item))
+                .Select(task => task.Result)
+                .Where(discount => discount != null)
+                .ToList();
         }
     }
 }

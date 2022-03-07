@@ -5,6 +5,7 @@ using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Presentation.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Business_Logic
 {
@@ -93,43 +94,62 @@ namespace Ebay.Presentation.Business_Logic
 
             return productCreateViewModel;
         }
-
+        
         public async Task PostCreateProductViewModel(ProductCreateViewModel productCreateViewModel)
         {
-
-            var categories = productCreateViewModel.CategoriesIds
-                .Select(async item => await _categoryRepository.Get(item))
-                .Select(task => task.Result)
-                .Where(category => category != null)
-                .ToList();
-            var discounts = productCreateViewModel.DiscountIds
-                .Select(async item => await _discountRepository.Get(item))
-                .Select(task => task.Result)
-                .Where(discount => discount != null)
-                .ToList();
-
-
-            var product = new Product
-            {
-                Name = productCreateViewModel.Name,
-                Description = productCreateViewModel.Description,
-                Quantity = productCreateViewModel.TotalQuantity,
-                Price = productCreateViewModel.Price,
-            };
-
-            var createdProductCategory = _productCategoryService.GetProductCategories(categories, product);
-            var createdProductDiscounts = _productDiscountService.GetProductDiscounts(discounts, product);
-            product.ProductCategories = createdProductCategory;
-            product.ProductDiscounts = createdProductDiscounts;
+            var product = CreateProductForDb(productCreateViewModel, true);
             await _productRepository.Insert(product);
         }
 
         public async Task<ProductCreateViewModel> GetEditProductView(int itemId)
         {
             var productCreateView = await _productService.GetProductCreateViewModelById(itemId);
-            productCreateView.CategoryResponseItems = await _categoryService.CreateDropdownCategory();
-            productCreateView.DiscountItems = await _discountService.CreateDropdownDiscounts();
+            var categoryResponseItems = await _categoryService.CreateDropdownCategory();
+            var discountResponseItems = await _discountService.CreateDropdownDiscounts();
+
+            var selectedCategoriesId = await _productService.GetSelectedCategoriesId(itemId);
+            var categoryResponseSelectedItems = categoryResponseItems
+                .Select(item => new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = selectedCategoriesId.Contains(int.Parse(item.Value))
+                });
+
+            var selectedDiscountsId = await _productService.GetSelectedDiscountId(itemId);
+            var discountsResponseSelectedItems = discountResponseItems
+                .Select(item => new SelectListItem
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = selectedDiscountsId.Contains(int.Parse(item.Value))
+                });
+
+            productCreateView.CategoryResponseItems = categoryResponseSelectedItems.ToList();
+            productCreateView.DiscountItems = discountsResponseSelectedItems.ToList();
             return productCreateView;
+        }
+
+        public async Task UpdateProduct(ProductCreateViewModel viewModel)
+        {
+            var product = CreateProductForDb(viewModel, false);
+            await _productRepository.Update(product);
+        }
+
+        
+        private Product CreateProductForDb(ProductCreateViewModel productCreateViewModel, bool ignoreId)
+        {
+            var categories = _categoryService.GetSelectedCategories(productCreateViewModel);
+            var discounts = _discountService.GetSelectedDiscounts(productCreateViewModel);
+
+            //await _productService.CreateProduct(productCreateViewModel, categories, discounts);
+            var product = _productService.CreateProduct(productCreateViewModel, ignoreId);
+
+            var createdProductCategory = _productCategoryService.GetProductCategories(categories, product);
+            var createdProductDiscounts = _productDiscountService.GetProductDiscounts(discounts, product);
+            product.ProductCategories = createdProductCategory;
+            product.ProductDiscounts = createdProductDiscounts;
+            return product;
         }
     }
 }

@@ -62,7 +62,12 @@ namespace Ebay.Presentation.Business_Logic
             _productCategoryService = new ProductCategoryService(_productCategoryRepository);
             _productDiscountService = new ProductDiscountService(_productDiscountRepository);
         }
-
+        /// <summary>
+        ///  Method <c>GetIndexView</c> gets all <c>ProductViewModel</c> for visualization in UI.
+        /// </summary>
+        /// <returns>
+        ///     List of all products in the DB.
+        /// </returns>
         public async Task<IEnumerable<ProductViewModel>> GetIndexView()
         {
             var products = await _productRepository.GetAll();
@@ -83,7 +88,12 @@ namespace Ebay.Presentation.Business_Logic
 
             return productsViews;
         }
-
+        /// <summary>
+        ///  Method <c>GetCreateProductView</c> gets the <c>ProductCreateViewModel</c> for the visualization in UI.
+        /// </summary>
+        /// <returns>
+        ///     <c>ProductCreateViewModel</c> entity.
+        /// </returns>
         public async Task<ProductCreateViewModel> GetCreateProductView()
         {
             ProductCreateViewModel productCreateViewModel = new ProductCreateViewModel();
@@ -94,13 +104,26 @@ namespace Ebay.Presentation.Business_Logic
 
             return productCreateViewModel;
         }
-        
+        /// <summary>
+        ///  Method <c>PostCreateProductViewModel</c> adds new product in the database.
+        /// </summary>
+        /// <param name="productCreateViewModel">
+        ///     The product which will be Inserted in the Database.
+        /// </param>
         public async Task PostCreateProductViewModel(ProductCreateViewModel productCreateViewModel)
         {
-            var product = CreateProductForDb(productCreateViewModel, true);
+            var product = await CreateProductForDb(productCreateViewModel, true);
             await _productRepository.Insert(product);
         }
-
+        /// <summary>
+        ///  Method <c>GetEditProductView</c> gets the <c>ProductCreateViewModel</c> for visualization in UI.
+        /// </summary>
+        /// <param name="itemId">
+        ///     Id of the product which is need to be returned.
+        /// </param>
+        /// <returns>
+        ///     <c>ProductCreateViewModel</c> entity.
+        /// </returns>
         public async Task<ProductCreateViewModel> GetEditProductView(int itemId)
         {
             var productCreateView = await _productService.GetProductCreateViewModelById(itemId);
@@ -129,24 +152,43 @@ namespace Ebay.Presentation.Business_Logic
             productCreateView.DiscountItems = discountsResponseSelectedItems.ToList();
             return productCreateView;
         }
-
+        /// <summary>
+        /// <c>async</c> method <c>UpdateProduct</c> updates specified <c>Product</c> entity in the repository.
+        /// </summary>
+        /// <param name="viewModel">Model which is sent from the controller</param>
         public async Task UpdateProduct(ProductCreateViewModel viewModel)
         {
-            var product = CreateProductForDb(viewModel, false);
+            var product = await CreateProductForDb(viewModel, false);
             await _productRepository.Update(product);
         }
-
-        
-        private Product CreateProductForDb(ProductCreateViewModel productCreateViewModel, bool ignoreId)
+        /// <summary>
+        ///  Method <c>CreateProductForDb</c> transforms <c>ProductCreateView</c> in <c>Product</c>.
+        /// </summary>
+        /// <param name="productCreateViewModel">
+        ///     Model which is sent from the controller.
+        /// </param>
+        /// <param name="isProductForInserting">
+        ///     Tells if the product is called for the Inserting in the database (true) or for the Updating purpose (false)
+        /// </param>
+        /// <returns>
+        ///     <c>Product</c> entity.
+        /// </returns>
+        private async Task<Product> CreateProductForDb(ProductCreateViewModel productCreateViewModel, bool isProductForInserting)
         {
+            await _productCategoryService.DeleteAll(productCreateViewModel.Id);
+            await _productDiscountService.DeleteAll(productCreateViewModel.Id);
+
             var categories = _categoryService.GetSelectedCategories(productCreateViewModel);
             var discounts = _discountService.GetSelectedDiscounts(productCreateViewModel);
 
             //await _productService.CreateProduct(productCreateViewModel, categories, discounts);
-            var product = _productService.CreateProduct(productCreateViewModel, ignoreId);
+            var product = _productService.CreateProduct(productCreateViewModel, isProductForInserting);
+            List<ProductCategory> createdProductCategory;
+            List<ProductDiscount> createdProductDiscounts;
 
-            var createdProductCategory = _productCategoryService.GetProductCategories(categories, product);
-            var createdProductDiscounts = _productDiscountService.GetProductDiscounts(discounts, product);
+            createdProductCategory = _productCategoryService.CreateProductCategories(categories, product);
+            createdProductDiscounts = _productDiscountService.CreateProductDiscounts(discounts, product);
+            
             product.ProductCategories = createdProductCategory;
             product.ProductDiscounts = createdProductDiscounts;
             return product;

@@ -12,7 +12,7 @@ namespace Ebay.Presentation.Services
             _productDiscountRepository = productRepository;
         }
 
-        public List<ProductDiscount> GetProductDiscounts(List<Discount> discounts, Product product)
+        public List<ProductDiscount> CreateProductDiscounts(List<Discount> discounts, Product product)
         {
             var productCategories = discounts
                 .Select(discount => new ProductDiscount
@@ -27,6 +27,18 @@ namespace Ebay.Presentation.Services
                 _productCategoryRepository.Insert(item);
             }*/
             return productCategories.ToList();
+        }
+
+        public async Task DeleteAll(int productId)
+        {
+            var allDiscounts = await _productDiscountRepository.GetAll();
+            var productDiscoutns = allDiscounts.Where(item => item.ProductId == productId).ToList();
+            foreach (var item in productDiscoutns)
+            {
+                await _productDiscountRepository.Delete(item);
+            }
+            // Not working gives an error
+            //productCategories.ForEach(async productCategory => await _productCategoryRepository.Delete(productCategory));
         }
     }
 }

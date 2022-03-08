@@ -12,6 +12,19 @@ namespace Ebay.Presentation.Services
             _productCategoryRepository = productCategoryRepository;
         }
 
+        /// <summary>
+        ///  Method <c>CreateProductCategories</c> creates product categories for new relation between 
+        ///  <c>Product</c> entity and <c>Category</c>.
+        /// </summary>
+        /// <param name="categories">
+        ///     List of all categories which user wants to be related to the product
+        /// </param>
+        /// <param name="product">
+        ///     <c>Product entity</c>> which was created or updated
+        /// </param>
+        /// <returns>
+        ///     <c>List<ProductCategory></c> which is the list of all new relation between product and category.
+        /// </returns>
         public List<ProductCategory> CreateProductCategories(List<Category> categories, Product product)
         {
             var productCategories = categories
@@ -29,6 +42,12 @@ namespace Ebay.Presentation.Services
             return productCategories.ToList();
         }
 
+        /// <summary>
+        ///  Method <c>DeleteAll</c> deletes all relations between the specific <c>Product</c> entity and categories. 
+        /// </summary>
+        /// <param name="productId">
+        ///     Represents the Id of the product relations of what we want to delete.
+        /// </param>
         public async Task DeleteAll(int productId)
         {
             var allCategories = await _productCategoryRepository.GetAll();

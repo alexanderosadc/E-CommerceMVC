@@ -13,6 +13,15 @@ namespace Ebay.Presentation.Services
         {
             _discountRepository = discountRepository;
         }
+        /// <summary>
+        ///  Method <c>ToDiscountView</c> transforms <c>Discount</c> to <c>DiscountView</c>.
+        /// </summary>
+        /// <param name="discount">
+        ///     Discount EF entity.
+        /// </param>
+        /// <returns>
+        ///     <c>DiscountView</c> entity.
+        /// </returns>
         public DiscountView ToDiscountView(Discount discount)
         {
             return new DiscountView
@@ -25,7 +34,12 @@ namespace Ebay.Presentation.Services
                 EndDate = discount.EndDate,
             };
         }
-
+        /// <summary>
+        ///  Method <c>CreateDropdownDiscounts</c> creates dropodown list of all discounts for the UI.
+        /// </summary>
+        /// <returns>
+        ///     <c>List<SelectedListItem></c> which is used on visualization in UI.
+        /// </returns>
         public async Task<List<SelectListItem>> CreateDropdownDiscounts()
         {
             var productCategories = await _discountRepository.GetAll();
@@ -37,7 +51,16 @@ namespace Ebay.Presentation.Services
 
             return categorySelectedItems.ToList();
         }
-
+        /// <summary>
+        ///  Method <c>GetSelectedDiscounts</c> gets <c>ProductCreateViewModel</c> and finds 
+        ///  all <c>Discounts</c> related to this product.
+        /// </summary>
+        /// <param name="viewModel">
+        ///     <c>ProductCreateViewModel</c> which represents the product entity.
+        /// </param>
+        /// <returns>
+        ///     <c>List<DiscountView></c> selects all Discounts related to the product.
+        /// </returns>
         public List<Discount> GetSelectedDiscounts(ProductCreateViewModel viewModel)
         {
             return viewModel.DiscountIds

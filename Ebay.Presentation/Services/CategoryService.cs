@@ -14,7 +14,13 @@ namespace Ebay.Presentation.Services
         {
             _categoryRepository = categoryRepository;
         }
-
+        /// <summary>
+        ///  Method <c>CreateDropdownCategory</c> gets the <c>List<SelectedListItem></c> for visualization 
+        ///  dropdown menu in UI.
+        /// </summary>
+        /// <returns>
+        ///     <c>List of SelectedListItems.</c> entity.
+        /// </returns>
         public async Task<List<SelectListItem>> CreateDropdownCategory()
         {
 
@@ -27,7 +33,16 @@ namespace Ebay.Presentation.Services
 
             return categorySelectedItems.ToList();
         }
-
+        /// <summary>
+        ///  Method <c>GetSelectedCategories</c> gets <c>ProductCreateViewModel</c> and returns 
+        ///  all categories which are related to this product.
+        /// </summary>
+        /// <param name="viewModel">
+        ///     ProductCreateViewModel which is retrieved from UI.
+        /// </param>
+        /// <returns>
+        ///     <c>List<Category></c> entity, which represents all categories related to the product.
+        /// </returns>
         public List<Category> GetSelectedCategories(ProductCreateViewModel viewModel)
         {
             return viewModel.CategoriesIds

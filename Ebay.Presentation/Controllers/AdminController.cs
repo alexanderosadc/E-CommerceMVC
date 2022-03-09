@@ -38,7 +38,7 @@ namespace Ebay.Presentation.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ProductViewModel> products = await _adminBusinessLogic.GetIndexView();
+            IEnumerable<ProductViewModel> products = await _adminBusinessLogic.GetProductsViews();
             return View(products);
         }
 
@@ -47,6 +47,7 @@ namespace Ebay.Presentation.Controllers
             var product = await _adminBusinessLogic.GetCreateProductView();
             return View(product);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductCreateViewModel modelView)
         {
@@ -64,6 +65,7 @@ namespace Ebay.Presentation.Controllers
             return View(productCreateView);
         }
 
+        [HttpPost]
         public async Task<IActionResult> UpdateProduct(ProductCreateViewModel modelView)
         {
             if (ModelState.IsValid)
@@ -71,7 +73,13 @@ namespace Ebay.Presentation.Controllers
                 await _adminBusinessLogic.UpdateProduct(modelView);
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(EditProduct), new {itemId = modelView.Id });
+            return RedirectToAction(nameof(EditProduct), new {itemId = modelView.Id});
+        }
+
+        public async Task<IActionResult> ProductDetails(int itemId)
+        {
+            var productView = await _adminBusinessLogic.GetProductView(itemId);
+            return View(productView);
         }
     }
 }

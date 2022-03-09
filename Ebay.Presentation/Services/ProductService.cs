@@ -16,7 +16,6 @@ namespace Ebay.Presentation.Services
         {
             _productRepository = productRepository;
         }
-
         /// <summary>
         ///  Method <c>GetNumberOfRecords</c> gets number of all records in the <c>Product</c> table in the database.
         /// </summary>

@@ -63,30 +63,28 @@ namespace Ebay.Presentation.Business_Logic
             _productDiscountService = new ProductDiscountService(_productDiscountRepository);
         }
         /// <summary>
-        ///  Method <c>GetIndexView</c> gets all <c>ProductViewModel</c> for visualization in UI.
+        ///  Method <c>GetProductsViews</c> gets all <c>ProductViewModel</c> for visualization in UI.
         /// </summary>
         /// <returns>
         ///     List of all products in the DB.
         /// </returns>
-        public async Task<IEnumerable<ProductViewModel>> GetIndexView()
+        public async Task<IEnumerable<ProductViewModel>> GetProductsViews()
         {
             var products = await _productRepository.GetAll();
 
             //var productsViews = _productService.GetProductViewModels(products).ToList();
 
-            var productsViews = products.Select(item => new ProductViewModel
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Description = item.Description,
-                TotalQuantity = item.Quantity,
-                Price = item.Price,
-                CategoryNames = item.ProductCategories.Select(productCat => productCat.Category.Name).ToList(),
-                DiscountViews = item.ProductDiscounts
-                    .Select(productDisc => _discountService.ToDiscountView(productDisc.Discount)),
-            });
+            var productsViews = products.Select(item => CreateProductView(item));
 
             return productsViews;
+        }
+
+        public async Task<ProductViewModel> GetProductView(int id)
+        {
+            var product = await _productRepository.Get(id);
+            var productView = CreateProductView(product);
+
+            return productView;
         }
         /// <summary>
         ///  Method <c>GetCreateProductView</c> gets the <c>ProductCreateViewModel</c> for the visualization in UI.
@@ -116,7 +114,7 @@ namespace Ebay.Presentation.Business_Logic
             await _productRepository.Insert(product);
         }
         /// <summary>
-        ///  Method <c>GetEditProductView</c> gets the <c>ProductCreateViewModel</c> for visualization in UI.
+        ///  Method <c>GetProductView</c> gets the <c>ProductCreateViewModel</c> for visualization in UI.
         /// </summary>
         /// <param name="itemId">
         ///     Id of the product which is need to be returned.
@@ -192,6 +190,21 @@ namespace Ebay.Presentation.Business_Logic
             product.ProductCategories = createdProductCategory;
             product.ProductDiscounts = createdProductDiscounts;
             return product;
+        }
+
+        private ProductViewModel CreateProductView(Product product)
+        {
+            return new ProductViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                TotalQuantity = product.Quantity,
+                Price = product.Price,
+                CategoryNames = product.ProductCategories.Select(productCat => productCat.Category.Name).ToList(),
+                DiscountViews = product.ProductDiscounts
+                    .Select(productDisc => _discountService.ToDiscountView(productDisc.Discount)),
+            };
         }
     }
 }

@@ -1,0 +1,59 @@
+﻿@using Ebay.Infrastructure.ViewModels.Admin.Index
+@model ProductViewModel
+
+<h3 class="bg-info text-white text-center p-1">Details</h3>
+<table class="table table-sm table-bordered table-striped">
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <th>Title</th>
+            <td>@Model.Name</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <th>Quantity</th>
+            <td>@Model.TotalQuantity</td>
+        </tr>
+        <tr>
+            <th>Categories of Products</th>
+            <td>
+                        @foreach(var name in @Model.CategoryNames)
+                        { 
+                            <span>@name,</span>
+                            <br />
+                        }
+           </td>
+        </tr>
+        <tr>
+            <th>Discounts Applied</th>
+            <td>
+                        @foreach(var discount in @Model.DiscountViews)
+                        { 
+                            <span>@discount.Name = @discount.DiscountPercent %,</span>
+                            <br />
+                        }
+           </td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>@Model.Price.ToString("C")</td>
+        </tr>
+    </tbody>
+</table>
+<a class="btn btn-warning" 
+        asp-controller="Admin" 
+        asp-action="EditProduct" 
+        asp-route-itemId=@Model.Id>
+        Edit
+</a>
+<a class="btn btn-secondary" 
+        asp-controller="Admin" 
+        asp-action="Index">
+        Back
+</a>

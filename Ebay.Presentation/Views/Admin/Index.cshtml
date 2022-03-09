@@ -51,6 +51,12 @@
                                 asp-route-itemId="@item.Id">
                             Edit
                         </a>
+                        <a class="btn btn-danger btn-sm"
+                                asp-controller="Admin"
+                                asp-action="DeleteProduct"
+                                asp-route-itemId="@item.Id">
+                            Delete
+                        </a>
                     </td>
                 </tr>
             }

@@ -62,6 +62,21 @@ namespace Ebay.Presentation.Business_Logic
             _productCategoryService = new ProductCategoryService(_productCategoryRepository);
             _productDiscountService = new ProductDiscountService(_productDiscountRepository);
         }
+        public async Task DeleteProduct(int id)
+        {
+            var product = await _productRepository.Get(id);
+            if (product != null)
+            {
+                await _productRepository.Delete(product);
+            }
+        }
+        public async Task<ProductViewModel> GetProductView(int id)
+        {
+            var product = await _productRepository.Get(id);
+            var productView = CreateProductView(product);
+
+            return productView;
+        }
         /// <summary>
         ///  Method <c>GetProductsViews</c> gets all <c>ProductViewModel</c> for visualization in UI.
         /// </summary>
@@ -79,13 +94,7 @@ namespace Ebay.Presentation.Business_Logic
             return productsViews;
         }
 
-        public async Task<ProductViewModel> GetProductView(int id)
-        {
-            var product = await _productRepository.Get(id);
-            var productView = CreateProductView(product);
-
-            return productView;
-        }
+        
         /// <summary>
         ///  Method <c>GetCreateProductView</c> gets the <c>ProductCreateViewModel</c> for the visualization in UI.
         /// </summary>

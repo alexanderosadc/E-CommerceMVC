@@ -81,5 +81,11 @@ namespace Ebay.Presentation.Controllers
             var productView = await _adminBusinessLogic.GetProductView(itemId);
             return View(productView);
         }
+
+        public async Task<IActionResult> DeleteProduct(int itemId)
+        {
+            await _adminBusinessLogic.DeleteProduct(itemId);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

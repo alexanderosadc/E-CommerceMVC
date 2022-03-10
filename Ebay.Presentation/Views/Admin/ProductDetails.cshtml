@@ -41,8 +41,12 @@
            </td>
         </tr>
         <tr>
-            <th>Price</th>
+            <th>Initial Price</th>
             <td>@Model.Price.ToString("C")</td>
+        </tr>
+        <tr>
+            <th>Price with Discounts</th>
+            <td>@Model.FinalPrice.ToString("C")</td>
         </tr>
     </tbody>
 </table>

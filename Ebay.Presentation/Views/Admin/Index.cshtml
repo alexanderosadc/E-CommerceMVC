@@ -40,12 +40,15 @@
                         }
                     </td>
                     <td>
+                        @item.FinalPrice.ToString("c")
+                    </td>
+                    <td>
                         <a class="btn btn-info btn-sm" asp-controller="Admin" 
                                 asp-action="ProductDetails" 
                                 asp-route-itemId="@item.Id">
                             Details
                         </a>
-                        <a class="btn btn-info btn-sm" 
+                        <a class="btn btn-warning btn-sm" 
                                 asp-controller="Admin"
                                 asp-action="EditProduct"
                                 asp-route-itemId="@item.Id">

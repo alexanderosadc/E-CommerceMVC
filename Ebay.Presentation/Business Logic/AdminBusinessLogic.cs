@@ -74,6 +74,9 @@ namespace Ebay.Presentation.Business_Logic
         {
             var product = await _productRepository.Get(id);
             var productView = CreateProductView(product);
+            var discountSum = productView.DiscountViews.Sum(item => item.DiscountPercent);
+
+            productView.FinalPrice = _productService.GetFinalPrice(product.Price, discountSum);
 
             return productView;
         }
@@ -89,7 +92,13 @@ namespace Ebay.Presentation.Business_Logic
 
             //var productsViews = _productService.GetProductViewModels(products).ToList();
 
-            var productsViews = products.Select(item => CreateProductView(item));
+            var productsViews = products.Select(item => CreateProductView(item)).ToList();
+            productsViews.ForEach(item => item.FinalPrice =
+                _productService.GetFinalPrice(
+                    item.Price,
+                    item.DiscountViews.Sum(item => item.DiscountPercent)
+                    )
+                );
 
             return productsViews;
         }

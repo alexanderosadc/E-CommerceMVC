@@ -16,6 +16,13 @@ namespace Ebay.Presentation.Services
         {
             _productRepository = productRepository;
         }
+
+        public double GetFinalPrice(double currentPrice, double discountsSum)
+        {
+            var discountValue = ((currentPrice * discountsSum) / 100);
+
+            return currentPrice - discountValue;
+        }
         /// <summary>
         ///  Method <c>GetNumberOfRecords</c> gets number of all records in the <c>Product</c> table in the database.
         /// </summary>

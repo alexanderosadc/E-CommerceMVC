@@ -9,6 +9,7 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
         public string Description { get; set; }
         public int TotalQuantity { get; set; }
         public double Price { get; set; }
+        public double FinalPrice { get; set; }
 
         public IEnumerable<string>? CategoryNames { get; set; }
 

@@ -5,9 +5,11 @@ using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Domain.Entities.JoinTables;
 using Ebay.Presentation.Business_Logic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ebay.Presentation.Controllers
 {
+   // [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private readonly AdminBusinessLogic _adminBusinessLogic;

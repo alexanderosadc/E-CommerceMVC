@@ -34,11 +34,11 @@
         </div>
         <div class="form-group">
             <label>Select Categories of Product</label>
-            <select class="dropdown-item" asp-for="CategoriesIds" asp-items=@Model.CategoryResponseItems></select>
+            <select multiple class="dropdown-item" asp-for="CategoriesIds" asp-items=@Model.CategoryResponseItems></select>
         </div>
         <div>
             <label>Select Discounts</label>
-            <select class="dropdown-item" asp-for="DiscountIds" asp-items=@Model.DiscountItems></select>
+            <select multiple class="dropdown-item" asp-for="DiscountIds" asp-items=@Model.DiscountItems></select>
         </div>
         <button class="btn btn-primary" type="submit">Save</button>
 </form>

@@ -1,0 +1,34 @@
+﻿@using Ebay.Infrastructure.ViewModels.Admin.CreateCategory
+
+
+@model CategoryCreateViewModel
+
+<div class="text-danger" asp-validation-summary=All></div>
+<form method="post" asp-controller="Admin" asp-action="CreateCategory">
+        <div class="form-group" hidden>
+            <label>ID</label>
+            <input class="form-control" asp-for=Id />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input type="text" asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea type="text" asp-for="Description" class="form-control" ></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+      @*  <div class="form-group">
+            <label>Select Parent Category of Product</label>
+            <select class="dropdown-item" asp-for="ParentId" asp-items=@Model.AllParentCategories></select>
+        </div>*@
+        <div>
+            <label>Select Subcategories</label>
+            <select multiple class="form-control w-50 dropdown" class="dropdown-item" asp-for="ChildIds" asp-items=@Model.AllChildrenCategories></select>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+</form>

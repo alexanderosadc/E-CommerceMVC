@@ -25,6 +25,7 @@ namespace Ebay.Presentation.Seeders
             {
                 context.Database.Migrate();
             }
+
             RoleManager<IdentityRole> roleManager = app.ApplicationServices
                 .CreateScope().ServiceProvider
                 .GetRequiredService<RoleManager<IdentityRole>>();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ebay.Infrastructure.ViewModels.Admin.Index
 {
-    public class DiscountView
+    public class DiscountViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

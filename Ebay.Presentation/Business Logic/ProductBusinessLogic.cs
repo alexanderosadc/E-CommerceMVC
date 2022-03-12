@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Business_Logic
 {
-    public class AdminBusinessLogic
+    public class ProductBusinessLogic
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<CartItem> _cartItemRepository;
@@ -30,7 +30,7 @@ namespace Ebay.Presentation.Business_Logic
 
         private readonly ProductCategoryService _productCategoryService;
         private readonly ProductDiscountService _productDiscountService;
-        public AdminBusinessLogic(
+        public ProductBusinessLogic(
             IRepository<Product> productRepository,
             IRepository<CartItem> cartItemRepository,
             IRepository<Category> categoryRepository,
@@ -143,29 +143,23 @@ namespace Ebay.Presentation.Business_Logic
         public async Task<ProductCreateViewModel> GetEditProductView(int itemId)
         {
             var productCreateView = await _productService.GetProductCreateViewModelById(itemId);
-            var categoryResponseItems = await _categoryService.CreateDropdownCategory();
-            var discountResponseItems = await _discountService.CreateDropdownDiscounts();
+            productCreateView.CategoryResponseItems = await _categoryService.CreateDropdownCategory();
+            productCreateView.DiscountItems = await _discountService.CreateDropdownDiscounts();
 
             var selectedCategoriesId = await _productService.GetSelectedCategoriesId(itemId);
-            var categoryResponseSelectedItems = categoryResponseItems
-                .Select(item => new SelectListItem
+            productCreateView.CategoryResponseItems
+                .ForEach(item => 
                 {
-                    Text = item.Text,
-                    Value = item.Value,
-                    Selected = selectedCategoriesId.Contains(int.Parse(item.Value))
+                    item.Selected = selectedCategoriesId.Contains(int.Parse(item.Value));
                 });
 
             var selectedDiscountsId = await _productService.GetSelectedDiscountId(itemId);
-            var discountsResponseSelectedItems = discountResponseItems
-                .Select(item => new SelectListItem
+            productCreateView.DiscountItems
+                .ForEach(item => 
                 {
-                    Text = item.Text,
-                    Value = item.Value,
-                    Selected = selectedDiscountsId.Contains(int.Parse(item.Value))
+                    item.Selected = selectedDiscountsId.Contains(int.Parse(item.Value));
                 });
 
-            productCreateView.CategoryResponseItems = categoryResponseSelectedItems.ToList();
-            productCreateView.DiscountItems = discountsResponseSelectedItems.ToList();
             return productCreateView;
         }
         /// <summary>

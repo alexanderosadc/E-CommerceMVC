@@ -1,6 +1,7 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.ViewModels.Admin.CreateCategory;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -31,7 +32,8 @@ namespace Ebay.Presentation.Services
                 Value = item.Id.ToString()
             });
 
-            return categorySelectedItems.ToList();
+            var categorySelectedListItem = categorySelectedItems.ToList();
+            return categorySelectedListItem;
         }
         /// <summary>
         ///  Method <c>GetSelectedCategories</c> gets <c>ProductCreateViewModel</c> and returns 
@@ -50,6 +52,48 @@ namespace Ebay.Presentation.Services
                 .Select(task => task.Result)
                 .Where(category => category != null)
                 .ToList();
+        }
+
+        public async Task<int> GetNumberOfRecords()
+        {
+            var categories = await _categoryRepository.GetAll();
+            return categories.AsQueryable().Count();
+        }
+
+        public async Task<Category> FromCreateDtoToCategory(CategoryCreateViewModel categoryViewModel)
+        {
+            var category = new Category
+            {
+                Name = categoryViewModel.Name,
+                Description = categoryViewModel.Description,
+            };
+            var childCategories = new List<Category>();
+            foreach (var childId in categoryViewModel.ChildIds)
+            {
+                var childCategory = await _categoryRepository.Get(childId);
+                childCategories.Add(childCategory);
+            }
+
+            category.Categories = childCategories;
+            return category;
+        }
+
+        public async Task<CategoryCreateViewModel> FromCategoryToCreateDto(Category category)
+        {
+            List<int> selectedItemsId = category.Categories.Select(category => category.Id).ToList();
+            var categoryCreateView = new CategoryCreateViewModel
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description,
+                AllChildrenCategories = await CreateDropdownCategory()
+            };
+
+            categoryCreateView.AllChildrenCategories
+                .ForEach(selectedElement => selectedElement.Selected =
+                selectedItemsId.Contains(int.Parse(selectedElement.Value)));
+
+            return categoryCreateView;
         }
     }
 }

@@ -13,6 +13,6 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
 
         public IEnumerable<string>? CategoryNames { get; set; }
 
-        public IEnumerable<DiscountView>? DiscountViews { get; set; }
+        public IEnumerable<DiscountViewModel>? DiscountViews { get; set; }
     }
 }

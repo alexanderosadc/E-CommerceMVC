@@ -22,9 +22,9 @@ namespace Ebay.Presentation.Services
         /// <returns>
         ///     <c>DiscountView</c> entity.
         /// </returns>
-        public DiscountView ToDiscountView(Discount discount)
+        public DiscountViewModel ToDiscountView(Discount discount)
         {
-            return new DiscountView
+            return new DiscountViewModel
             {
                 Id = discount.Id,
                 Name = discount.Name,

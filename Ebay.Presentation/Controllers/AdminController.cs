@@ -17,6 +17,7 @@ namespace Ebay.Presentation.Controllers
         // Business Logic 
         private readonly ProductBusinessLogic _productBusinessLogic;
         private readonly CategoryBusinessLogic _categoryBusinessLogic;
+        private readonly DiscountBusinessLogic _discountBusinessLogic;
         // Services declaration
 
         public AdminController(
@@ -41,6 +42,7 @@ namespace Ebay.Presentation.Controllers
                 productDiscountRepository
                 );
             _categoryBusinessLogic = new CategoryBusinessLogic(categoryRepository);
+            _discountBusinessLogic = new DiscountBusinessLogic(discountRepository);
         }
 
         public async Task<IActionResult> Index()
@@ -143,6 +145,55 @@ namespace Ebay.Presentation.Controllers
         {
             await _categoryBusinessLogic.DeleteCategory(itemId);
             return RedirectToAction(nameof(ShowCategories));
+        }
+
+
+        public async Task<IActionResult> ShowDiscounts()
+        {
+            IEnumerable<DiscountViewModel> discounts = await _discountBusinessLogic.GetDiscountsDTO();
+            return View(discounts);
+        }
+
+        public async Task<IActionResult> CreateDiscount()
+        {
+            DiscountViewModel discount = await _discountBusinessLogic.GetDiscountDTO();
+            return View(discount);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateDiscount(DiscountViewModel discountViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                await _discountBusinessLogic.CreateNewDiscount(discountViewModel);
+                return RedirectToAction(nameof(ShowDiscounts));
+            }
+
+            return View(nameof(CreateDiscount));
+        }
+        public async Task<IActionResult> EditDiscount(int itemId)
+        {
+            var discountViewModel = await _discountBusinessLogic.EditDiscount(itemId);
+
+            return View(discountViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateDiscount(DiscountViewModel discountViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                await _discountBusinessLogic.UpdateDiscount(discountViewModel);
+                return RedirectToAction(nameof(ShowDiscounts));
+            }
+
+            return RedirectToAction(nameof(EditDiscount), new { itemId = discountViewModel.Id });
+        }
+
+        public async Task<IActionResult> DeleteDiscount(int itemId)
+        {
+            await _discountBusinessLogic.DeleteDiscount(itemId);
+            return RedirectToAction(nameof(ShowDiscounts));
         }
     }
 }

@@ -2,6 +2,7 @@
 using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin;
 using Ebay.Infrastructure.ViewModels.Admin.CreateCategory;
+using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Presentation.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

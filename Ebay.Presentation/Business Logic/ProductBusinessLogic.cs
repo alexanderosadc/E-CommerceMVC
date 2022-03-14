@@ -12,13 +12,13 @@ namespace Ebay.Presentation.Business_Logic
     public class ProductBusinessLogic
     {
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<CartItem> _cartItemRepository;
+ //       private readonly IRepository<CartItem> _cartItemRepository;
 
         private readonly IRepository<Category> _categoryRepository;
 
         private readonly IRepository<Photo> _photoRepository;
         private readonly IRepository<Discount> _discountRepository;
-        private readonly IRepository<Cart> _cartRepository;
+//        private readonly IRepository<Cart> _cartRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<ProductDiscount> _productDiscountRepository;
 
@@ -42,13 +42,13 @@ namespace Ebay.Presentation.Business_Logic
         )
         {
             _productRepository = productRepository;
-            _cartItemRepository = cartItemRepository;
+//            _cartItemRepository = cartItemRepository;
 
             _categoryRepository = categoryRepository;
 
             _photoRepository = photoRepository;
             _discountRepository = discountRepository;
-            _cartRepository = cartRepository;
+//            _cartRepository = cartRepository;
 
             
             _productCategoryRepository = productCategory;

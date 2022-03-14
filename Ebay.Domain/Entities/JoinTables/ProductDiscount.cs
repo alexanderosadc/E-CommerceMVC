@@ -10,8 +10,8 @@ namespace Ebay.Domain.Entities.JoinTables
     public class ProductDiscount : BaseEntity
     {
         public int DiscountId { get; set; }
-        public virtual Discount Discount { get; set; }
+        public virtual Discount? Discount { get; set; }
         public int ProductId { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual Product? Product { get; set; }
     }
 }

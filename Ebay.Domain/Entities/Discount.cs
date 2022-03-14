@@ -15,6 +15,6 @@ namespace Ebay.Domain.Entities
         public bool IsActive { get; set; } = false;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public virtual ICollection<ProductDiscount> ProductDiscounts { get; set; } 
+        public virtual ICollection<ProductDiscount>? ProductDiscounts { get; set; } 
     }
 }

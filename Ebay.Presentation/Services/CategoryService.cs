@@ -26,14 +26,12 @@ namespace Ebay.Presentation.Services
         {
 
             var productCategories = await _categoryRepository.GetAll();
-            var categorySelectedItems = productCategories.Select(item => new SelectListItem
+
+            return productCategories.Select(item => new SelectListItem
             {
                 Text = item.Name,
                 Value = item.Id.ToString()
-            });
-
-            var categorySelectedListItem = categorySelectedItems.ToList();
-            return categorySelectedListItem;
+            }).ToList(); ;
         }
         /// <summary>
         ///  Method <c>GetSelectedCategories</c> gets <c>ProductCreateViewModel</c> and returns 
@@ -64,15 +62,20 @@ namespace Ebay.Presentation.Services
         {
             var category = new Category
             {
+                Id = categoryViewModel.Id,
                 Name = categoryViewModel.Name,
                 Description = categoryViewModel.Description,
             };
             var childCategories = new List<Category>();
-            foreach (var childId in categoryViewModel.ChildIds)
+            if(categoryViewModel.ChildIds != null)
             {
-                var childCategory = await _categoryRepository.Get(childId);
-                childCategories.Add(childCategory);
+                foreach (var childId in categoryViewModel.ChildIds)
+                {
+                    var childCategory = await _categoryRepository.Get(childId);
+                    childCategories.Add(childCategory);
+                }
             }
+            
 
             category.Categories = childCategories;
             return category;
@@ -80,7 +83,12 @@ namespace Ebay.Presentation.Services
 
         public async Task<CategoryCreateViewModel> FromCategoryToCreateDto(Category category)
         {
-            List<int> selectedItemsId = category.Categories.Select(category => category.Id).ToList();
+            List<int> selectedItemsId = new List<int>();
+            if (category.Categories != null)
+            {
+                selectedItemsId = category.Categories.Select(category => category.Id).ToList();
+            }
+            
             var categoryCreateView = new CategoryCreateViewModel
             {
                 Id = category.Id,

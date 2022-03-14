@@ -10,6 +10,10 @@ namespace Ebay.Domain.Entities
 {
     public class Category : BaseEntity
     {
+        public Category()
+        {
+            Categories = new List<Category>();
+        }
         public string Name { get; set; }
         public string Description { get; set; }
         public int? ParentId { get; set; }

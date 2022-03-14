@@ -43,14 +43,45 @@ namespace Ebay.Presentation.Services
         public async Task<List<SelectListItem>> CreateDropdownDiscounts()
         {
             var productCategories = await _discountRepository.GetAll();
-            var categorySelectedItems = productCategories.Select(item => new SelectListItem
+
+            return productCategories.Select(item => new SelectListItem
             {
                 Text = item.Name + " = " + item.DiscountPercent.ToString() + "%",
                 Value = item.Id.ToString()
-            });
-
-            return categorySelectedItems.ToList();
+            }).ToList(); ;
         }
+
+        public Discount FromDtoToDiscount(DiscountViewModel discountViewModel)
+        {
+            return new Discount
+            {
+                Name = discountViewModel.Name,
+                DiscountPercent = discountViewModel.DiscountPercent,
+                IsActive = discountViewModel.IsActive,
+                StartDate = discountViewModel.StartDate,
+                EndDate = discountViewModel.EndDate
+            };
+        }
+
+        public DiscountViewModel FromDiscountToDto(Discount discount)
+        {
+            return new DiscountViewModel
+            {
+                Id = discount.Id,
+                Name= discount.Name,
+                DiscountPercent = discount.DiscountPercent,
+                StartDate = discount.StartDate,
+                EndDate= discount.EndDate,
+                IsActive= discount.IsActive,
+            };
+        }
+
+        public async Task<int> GetNumberOfRecords()
+        {
+            var discounts = await _discountRepository.GetAll();
+            return discounts.AsQueryable().Count();
+        }
+
         /// <summary>
         ///  Method <c>GetSelectedDiscounts</c> gets <c>ProductCreateViewModel</c> and finds 
         ///  all <c>Discounts</c> related to this product.

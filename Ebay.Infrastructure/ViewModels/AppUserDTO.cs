@@ -2,7 +2,7 @@
 
 namespace Ebay.Infrastructure.ViewModels
 {
-    public class AppUserViewModel
+    public class AppUserDTO
     {
         [Required(ErrorMessage = "Introduce your User Name")]
         public string? UserName { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Ebay.Infrastructure.ViewModels.Admin.Index
 {
-    public class ProductViewModel
+    public class ProductViewDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,6 +13,6 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
 
         public IEnumerable<string>? CategoryNames { get; set; }
 
-        public IEnumerable<DiscountViewModel>? DiscountViews { get; set; }
+        public IEnumerable<DiscountViewDTO>? DiscountViews { get; set; }
     }
 }

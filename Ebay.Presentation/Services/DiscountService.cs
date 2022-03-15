@@ -14,58 +14,25 @@ namespace Ebay.Presentation.Services
             _discountRepository = discountRepository;
         }
         /// <summary>
-        ///  Method <c>ToDiscountView</c> transforms <c>Discount</c> to <c>DiscountView</c>.
-        /// </summary>
-        /// <param name="discount">
-        ///     Discount EF entity.
-        /// </param>
-        /// <returns>
-        ///     <c>DiscountView</c> entity.
-        /// </returns>
-        public DiscountViewModel ToDiscountView(Discount discount)
-        {
-            return new DiscountViewModel
-            {
-                Id = discount.Id,
-                Name = discount.Name,
-                DiscountPercent = discount.DiscountPercent,
-                IsActive = discount.IsActive,
-                StartDate = discount.StartDate,
-                EndDate = discount.EndDate,
-            };
-        }
-        /// <summary>
         ///  Method <c>CreateDropdownDiscounts</c> creates dropodown list of all discounts for the UI.
         /// </summary>
         /// <returns>
         ///     <c>List<SelectedListItem></c> which is used on visualization in UI.
         /// </returns>
-        public async Task<List<SelectListItem>> CreateDropdownDiscounts()
+        /*public async Task<List<SelectListItem>> CreateDropdownDiscounts(IEnumerable<Discount> productCategories)
         {
-            var productCategories = await _discountRepository.GetAll();
+            //var productCategories = await _discountRepository.GetAll();
 
             return productCategories.Select(item => new SelectListItem
             {
                 Text = item.Name + " = " + item.DiscountPercent.ToString() + "%",
                 Value = item.Id.ToString()
             }).ToList(); ;
-        }
+        }*/
 
-        public Discount FromDtoToDiscount(DiscountViewModel discountViewModel)
+        public DiscountViewDTO FromDiscountToDto(Discount discount)
         {
-            return new Discount
-            {
-                Name = discountViewModel.Name,
-                DiscountPercent = discountViewModel.DiscountPercent,
-                IsActive = discountViewModel.IsActive,
-                StartDate = discountViewModel.StartDate,
-                EndDate = discountViewModel.EndDate
-            };
-        }
-
-        public DiscountViewModel FromDiscountToDto(Discount discount)
-        {
-            return new DiscountViewModel
+            return new DiscountViewDTO
             {
                 Id = discount.Id,
                 Name= discount.Name,
@@ -92,7 +59,7 @@ namespace Ebay.Presentation.Services
         /// <returns>
         ///     <c>List<DiscountView></c> selects all Discounts related to the product.
         /// </returns>
-        public List<Discount> GetSelectedDiscounts(ProductCreateViewModel viewModel)
+        public List<Discount> GetSelectedDiscounts(ProductCreateDTO viewModel)
         {
             return viewModel.DiscountIds
                 .Select(async item => await _discountRepository.Get(item))

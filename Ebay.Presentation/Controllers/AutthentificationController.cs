@@ -23,7 +23,7 @@ namespace Ebay.Presentation.Controllers
 
         public IActionResult LogIn()
         {
-            AppUserViewModel appUser = new AppUserViewModel();
+            AppUserDTO appUser = new AppUserDTO();
             return View(appUser);
         }
 

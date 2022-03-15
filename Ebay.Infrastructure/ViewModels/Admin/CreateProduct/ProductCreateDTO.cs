@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ebay.Infrastructure.ViewModels.Admin.CreateProduct
 {
-    public class ProductCreateViewModel
+    public class ProductCreateDTO
     {
         public int Id { get; set; }
 

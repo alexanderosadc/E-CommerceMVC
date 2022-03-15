@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ebay.Infrastructure.ViewModels.Admin
 {
-    public class CategoryViewModel
+    public class CategoryViewDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

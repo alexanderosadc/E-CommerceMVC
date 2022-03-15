@@ -1,6 +1,7 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
+using Ebay.Presentation.Helpers;
 using Ebay.Presentation.Services;
 
 namespace Ebay.Presentation.Business_Logic
@@ -15,49 +16,34 @@ namespace Ebay.Presentation.Business_Logic
             _discountService = new DiscountService(_discountRepository);
         }
 
-        public async Task<IEnumerable<DiscountViewModel>> GetDiscountsDTO()
+        public async Task<IEnumerable<DiscountViewDTO>> GetDiscountsDTO()
         {
             var categories = await _discountRepository.GetAll();
-            var categoryViews = categories.Select(item => CreateDiscountView(item));
+            var categoryViews = categories.Select(item => DTOMapper.ToDiscountViewDTO(item));
             return categoryViews;
         }
-
-        public DiscountViewModel CreateDiscountView(Discount discount)
+        public async Task<DiscountViewDTO> GetDiscountDTO()
         {
-            var discountViewModel = new DiscountViewModel
-            {
-                Id = discount.Id,
-                Name = discount.Name,
-                DiscountPercent = discount.DiscountPercent,
-                StartDate = discount.StartDate,
-                EndDate = discount.EndDate,
-                IsActive = discount.IsActive,
-            };
-            return discountViewModel;
-        }
-
-        public async Task<DiscountViewModel> GetDiscountDTO()
-        {
-            DiscountViewModel discountViewModel = new DiscountViewModel();
+            DiscountViewDTO discountViewModel = new DiscountViewDTO();
             discountViewModel.Id = await _discountService.GetNumberOfRecords() + 1;
             return discountViewModel;
         }
 
-        public async Task CreateNewDiscount(DiscountViewModel discountViewModel)
+        public async Task CreateNewDiscount(DiscountViewDTO discountViewModel)
         {
-            Discount discount = _discountService.FromDtoToDiscount(discountViewModel);
+            Discount discount = DTOMapper.ToDiscount(discountViewModel);
             await _discountRepository.Insert(discount);
         }
 
-        public async Task<DiscountViewModel> EditDiscount(int itemId)
+        public async Task<DiscountViewDTO> EditDiscount(int itemId)
         {
             var discount = await _discountRepository.Get(itemId);
             return _discountService.FromDiscountToDto(discount);
         }
 
-        public async Task UpdateDiscount(DiscountViewModel discountViewModel)
+        public async Task UpdateDiscount(DiscountViewDTO discountViewModel)
         {
-            var product = _discountService.FromDtoToDiscount(discountViewModel);
+            var product = DTOMapper.ToDiscount(discountViewModel);
             product.Id = discountViewModel.Id;
             await _discountRepository.Update(product);
         }

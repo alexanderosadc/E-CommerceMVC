@@ -3,6 +3,7 @@ using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
+using Ebay.Presentation.Helpers;
 using Ebay.Presentation.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -70,10 +71,10 @@ namespace Ebay.Presentation.Business_Logic
                 await _productRepository.Delete(product);
             }
         }
-        public async Task<ProductViewModel> GetProductView(int id)
+        public async Task<ProductViewDTO> GetProductView(int id)
         {
             var product = await _productRepository.Get(id);
-            var productView = CreateProductView(product);
+            var productView = DTOMapper.ToProductViewDTO(product);
             var discountSum = productView.DiscountViews.Sum(item => item.DiscountPercent);
 
             productView.FinalPrice = _productService.GetFinalPrice(product.Price, discountSum);
@@ -86,13 +87,13 @@ namespace Ebay.Presentation.Business_Logic
         /// <returns>
         ///     List of all products in the DB.
         /// </returns>
-        public async Task<IEnumerable<ProductViewModel>> GetProductsViews()
+        public async Task<IEnumerable<ProductViewDTO>> GetProductsViews()
         {
             var products = await _productRepository.GetAll();
 
             //var productsViews = _productService.GetProductViewModels(products).ToList();
 
-            var productsViews = products.Select(item => CreateProductView(item)).ToList();
+            var productsViews = products.Select(item => DTOMapper.ToProductViewDTO(item)).ToList();
             productsViews.ForEach(item => item.FinalPrice =
                 _productService.GetFinalPrice(
                     item.Price,
@@ -110,13 +111,15 @@ namespace Ebay.Presentation.Business_Logic
         /// <returns>
         ///     <c>ProductCreateViewModel</c> entity.
         /// </returns>
-        public async Task<ProductCreateViewModel> GetCreateProductView()
+        public async Task<ProductCreateDTO> GetCreateProductView()
         {
-            ProductCreateViewModel productCreateViewModel = new ProductCreateViewModel();
+            ProductCreateDTO productCreateViewModel = new ProductCreateDTO();
+            var productCategories = await _categoryRepository.GetAll();
+            var productDiscounts = await _discountRepository.GetAll();
 
             productCreateViewModel.Id = await _productService.GetNumberOfRecords() + 1;
-            productCreateViewModel.CategoryResponseItems = await _categoryService.CreateDropdownCategory();
-            productCreateViewModel.DiscountItems = await _discountService.CreateDropdownDiscounts();
+            productCreateViewModel.CategoryResponseItems = await DropdownHelper.CreateDropdownCategory(productCategories);
+            productCreateViewModel.DiscountItems = await DropdownHelper.CreateDropdownDiscounts(productDiscounts);
 
             return productCreateViewModel;
         }
@@ -126,7 +129,7 @@ namespace Ebay.Presentation.Business_Logic
         /// <param name="productCreateViewModel">
         ///     The product which will be Inserted in the Database.
         /// </param>
-        public async Task PostCreateProductViewModel(ProductCreateViewModel productCreateViewModel)
+        public async Task PostCreateProductViewModel(ProductCreateDTO productCreateViewModel)
         {
             var product = await CreateProductForDb(productCreateViewModel, true);
             await _productRepository.Insert(product);
@@ -140,11 +143,14 @@ namespace Ebay.Presentation.Business_Logic
         /// <returns>
         ///     <c>ProductCreateViewModel</c> entity.
         /// </returns>
-        public async Task<ProductCreateViewModel> GetEditProductView(int itemId)
+        public async Task<ProductCreateDTO> GetEditProductView(int itemId)
         {
             var productCreateView = await _productService.GetProductCreateViewModelById(itemId);
-            productCreateView.CategoryResponseItems = await _categoryService.CreateDropdownCategory();
-            productCreateView.DiscountItems = await _discountService.CreateDropdownDiscounts();
+            var productCategories = await _categoryRepository.GetAll();
+            var productDiscounts = await _discountRepository.GetAll();
+
+            productCreateView.CategoryResponseItems = await DropdownHelper.CreateDropdownCategory(productCategories);
+            productCreateView.DiscountItems = await DropdownHelper.CreateDropdownDiscounts(productDiscounts);
 
             var selectedCategoriesId = await _productService.GetSelectedCategoriesId(itemId);
             productCreateView.CategoryResponseItems
@@ -166,7 +172,7 @@ namespace Ebay.Presentation.Business_Logic
         /// <c>async</c> method <c>UpdateProduct</c> updates specified <c>Product</c> entity in the repository.
         /// </summary>
         /// <param name="viewModel">Model which is sent from the controller</param>
-        public async Task UpdateProduct(ProductCreateViewModel viewModel)
+        public async Task UpdateProduct(ProductCreateDTO viewModel)
         {
             var product = await CreateProductForDb(viewModel, false);
             await _productRepository.Update(product);
@@ -183,7 +189,7 @@ namespace Ebay.Presentation.Business_Logic
         /// <returns>
         ///     <c>Product</c> entity.
         /// </returns>
-        private async Task<Product> CreateProductForDb(ProductCreateViewModel productCreateViewModel, bool isProductForInserting)
+        private async Task<Product> CreateProductForDb(ProductCreateDTO productCreateViewModel, bool isProductForInserting)
         {
             await _productCategoryService.DeleteAll(productCreateViewModel.Id);
             await _productDiscountService.DeleteAll(productCreateViewModel.Id);
@@ -192,7 +198,8 @@ namespace Ebay.Presentation.Business_Logic
             var discounts = _discountService.GetSelectedDiscounts(productCreateViewModel);
 
             //await _productService.CreateProduct(productCreateViewModel, categories, discounts);
-            var product = _productService.CreateProduct(productCreateViewModel, isProductForInserting);
+            
+            var product = DTOMapper.ToProduct(productCreateViewModel, isProductForInserting);
             List<ProductCategory> createdProductCategory;
             List<ProductDiscount> createdProductDiscounts;
 
@@ -202,21 +209,6 @@ namespace Ebay.Presentation.Business_Logic
             product.ProductCategories = createdProductCategory;
             product.ProductDiscounts = createdProductDiscounts;
             return product;
-        }
-
-        private ProductViewModel CreateProductView(Product product)
-        {
-            return new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                TotalQuantity = product.Quantity,
-                Price = product.Price,
-                CategoryNames = product.ProductCategories.Select(productCat => productCat.Category.Name).ToList(),
-                DiscountViews = product.ProductDiscounts
-                    .Select(productDisc => _discountService.ToDiscountView(productDisc.Discount)),
-            };
         }
     }
 }

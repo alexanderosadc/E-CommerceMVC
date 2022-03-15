@@ -47,7 +47,7 @@ namespace Ebay.Presentation.Controllers
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<ProductViewModel> products = await _productBusinessLogic.GetProductsViews();
+            IEnumerable<ProductViewDTO> products = await _productBusinessLogic.GetProductsViews();
             return View(products);
         }
 
@@ -60,7 +60,7 @@ namespace Ebay.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductCreateViewModel modelView)
+        public async Task<IActionResult> CreateProduct(ProductCreateDTO modelView)
         {
             if(ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace Ebay.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProduct(ProductCreateViewModel modelView)
+        public async Task<IActionResult> UpdateProduct(ProductCreateDTO modelView)
         {
             if (ModelState.IsValid)
             {
@@ -101,18 +101,18 @@ namespace Ebay.Presentation.Controllers
 
         public async Task<IActionResult> ShowCategories()
         {
-            IEnumerable<CategoryViewModel> categories = await _categoryBusinessLogic.GetCategoyDTO();
+            IEnumerable<CategoryViewDTO> categories = await _categoryBusinessLogic.GetCategoyDTO();
             return View(categories);
         }
 
         public async Task<IActionResult> CreateCategory()
         {
-            CategoryCreateViewModel category = await _categoryBusinessLogic.GetCategoryCreateDTO();
+            CategoryCreateDTO category = await _categoryBusinessLogic.GetCategoryCreateDTO();
             return View(category);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CategoryCreateViewModel categoryViewModel)
+        public async Task<IActionResult> CreateCategory(CategoryCreateDTO categoryViewModel)
         {
             if(ModelState.IsValid)
             {
@@ -130,7 +130,7 @@ namespace Ebay.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCategory(CategoryCreateViewModel categoryCreateViewModel)
+        public async Task<IActionResult> UpdateCategory(CategoryCreateDTO categoryCreateViewModel)
         {
             if(ModelState.IsValid)
             {
@@ -150,18 +150,18 @@ namespace Ebay.Presentation.Controllers
 
         public async Task<IActionResult> ShowDiscounts()
         {
-            IEnumerable<DiscountViewModel> discounts = await _discountBusinessLogic.GetDiscountsDTO();
+            IEnumerable<DiscountViewDTO> discounts = await _discountBusinessLogic.GetDiscountsDTO();
             return View(discounts);
         }
 
         public async Task<IActionResult> CreateDiscount()
         {
-            DiscountViewModel discount = await _discountBusinessLogic.GetDiscountDTO();
+            DiscountViewDTO discount = await _discountBusinessLogic.GetDiscountDTO();
             return View(discount);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDiscount(DiscountViewModel discountViewModel)
+        public async Task<IActionResult> CreateDiscount(DiscountViewDTO discountViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -179,7 +179,7 @@ namespace Ebay.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateDiscount(DiscountViewModel discountViewModel)
+        public async Task<IActionResult> UpdateDiscount(DiscountViewDTO discountViewModel)
         {
             if (ModelState.IsValid)
             {

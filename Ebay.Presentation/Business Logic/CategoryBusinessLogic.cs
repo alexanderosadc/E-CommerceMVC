@@ -3,6 +3,7 @@ using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin;
 using Ebay.Infrastructure.ViewModels.Admin.CreateCategory;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
+using Ebay.Presentation.Helpers;
 using Ebay.Presentation.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -18,16 +19,16 @@ namespace Ebay.Presentation.Business_Logic
             _categoryService = new CategoryService(categoryRepository);
         }
 
-        public async Task<IEnumerable<CategoryViewModel>> GetCategoyDTO()
+        public async Task<IEnumerable<CategoryViewDTO>> GetCategoyDTO()
         {
             var categories = await _categoryRepository.GetAll();
             var categoryViews = categories.Select(item => CreateCategoryView(item));
             return categoryViews;
         }
 
-        public CategoryViewModel CreateCategoryView(Category category)
+        public CategoryViewDTO CreateCategoryView(Category category)
         {
-            var categoryViewModel = new CategoryViewModel
+            var categoryViewModel = new CategoryViewDTO
             {
                 Id = category.Id,
                 Name = category.Name,
@@ -41,9 +42,9 @@ namespace Ebay.Presentation.Business_Logic
             return categoryViewModel;
         }
 
-        public async Task<CategoryCreateViewModel> GetCategoryCreateDTO()
+        public async Task<CategoryCreateDTO> GetCategoryCreateDTO()
         {
-            CategoryCreateViewModel categoryCreateViewModel = new CategoryCreateViewModel();
+            CategoryCreateDTO categoryCreateViewModel = new CategoryCreateDTO();
             categoryCreateViewModel.Id = await _categoryService.GetNumberOfRecords() + 1;
             //categoryCreateViewModel.AllParentCategories = await _categoryService.CreateDropdownCategory();
             /*categoryCreateViewModel.AllParentCategories.Add(new SelectListItem
@@ -51,35 +52,53 @@ namespace Ebay.Presentation.Business_Logic
                 Text = "None",
                 Value = null
             });*/
-            categoryCreateViewModel.AllChildrenCategories = await _categoryService.CreateDropdownCategory();
+            var productCategories = await _categoryRepository.GetAll();
+            categoryCreateViewModel.AllChildrenCategories = await DropdownHelper.CreateDropdownCategory(productCategories);
 
 
             return categoryCreateViewModel;
         }
 
-        public async Task CreateNewCategory(CategoryCreateViewModel categoryViewModel)
+        public async Task CreateNewCategory(CategoryCreateDTO categoryViewModel)
         {
-            Category category = await _categoryService.FromCreateDtoToCategory(categoryViewModel);
+            List<Category> childCategories = await GetChildCategories(categoryViewModel);
+            Category category = DTOMapper.ToCategory(categoryViewModel, childCategories);
             await _categoryRepository.Insert(category);
         }
 
-        public async Task<CategoryCreateViewModel> EditCategory(int itemId)
+        public async Task<CategoryCreateDTO> EditCategory(int itemId)
         {
             var category = await _categoryRepository.Get(itemId);
-            var categoryCreateModel = await _categoryService.FromCategoryToCreateDto(category);
+            var productCategories = await _categoryRepository.GetAll();
+            var categoryCreateModel = await DTOMapper.ToCategoryCreateDTO(category, productCategories);
             return categoryCreateModel;
         }
 
-        public async Task UpdateCategory(CategoryCreateViewModel categoryCreateViewModel)
+        public async Task UpdateCategory(CategoryCreateDTO categoryCreateViewModel)
         {
-            var product = await _categoryService.FromCreateDtoToCategory(categoryCreateViewModel);
-            await _categoryRepository.Update(product);
+            List<Category> childCategories = await GetChildCategories(categoryCreateViewModel);
+            var category = DTOMapper.ToCategory(categoryCreateViewModel, childCategories);
+            await _categoryRepository.Update(category);
         }
 
         public async Task DeleteCategory(int itemId)
         {
             var category = await _categoryRepository.Get(itemId);
             await _categoryRepository.Delete(category);
+        }
+
+        private async Task<List<Category>> GetChildCategories(CategoryCreateDTO dto)
+        {
+            var childCategories = new List<Category>();
+            if (dto.ChildIds != null)
+            {
+                foreach (var childId in dto.ChildIds)
+                {
+                    var childCategory = await _categoryRepository.Get(childId);
+                    childCategories.Add(childCategory);
+                }
+            }
+            return childCategories;
         }
     } 
 } 

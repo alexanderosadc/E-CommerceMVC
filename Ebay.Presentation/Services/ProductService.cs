@@ -4,6 +4,7 @@ using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.Persistance;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
+using Ebay.Presentation.Helpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Services
@@ -34,33 +35,6 @@ namespace Ebay.Presentation.Services
             var products = await _productRepository.GetAll();
             return products.AsQueryable().Count();
         }
-        /// <summary>
-        ///  Method <c>CreateProduct</c> creates <c>Product</c> from <c>ProductViewModel</c>.
-        /// </summary>
-        /// <param name="viewModel">
-        ///     <c>ProductCreateViewModel</c> represents view of the product.
-        /// </param>
-        /// <param name="ignoreID">
-        ///     Helps us to detect if we Update the entity(ignoreId = false) or if we create new Product (ignoreId = true)
-        /// </param>
-        /// <returns>
-        ///     New <c>Product</c> entity.
-        /// </returns>
-        public Product CreateProduct(ProductCreateViewModel viewModel, bool ignoreID)
-        {
-            var product = new Product 
-                {
-                    Name = viewModel.Name,
-                    Description = viewModel.Description,
-                    Quantity = viewModel.TotalQuantity,
-                    Price = viewModel.Price,
-                };
-            if(ignoreID == false)
-            {
-                product.Id = viewModel.Id;
-            }
-            return product;
-        }
 
         /// <summary>
         ///  Method <c>GetProductCreateViewModelById</c> transforms <c>Product</c> to <c>ProductCreateViewModel</c>.
@@ -70,18 +44,10 @@ namespace Ebay.Presentation.Services
         /// <returns>
         ///     <c>ProductCreateViewModel</c> which represents a view of the entity.
         /// </returns>
-        public async Task<ProductCreateViewModel> GetProductCreateViewModelById(int id)
+        public async Task<ProductCreateDTO> GetProductCreateViewModelById(int id)
         {
             var product = await _productRepository.Get(id);
-            var productCreateView = new ProductCreateViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                TotalQuantity = product.Quantity,
-                Price = product.Price,
-            };
-            return productCreateView;
+            return DTOMapper.ToProductCreateDTO(product);
         }
 
         /// <summary>

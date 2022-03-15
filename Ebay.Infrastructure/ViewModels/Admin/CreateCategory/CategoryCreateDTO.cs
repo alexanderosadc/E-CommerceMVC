@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Ebay.Infrastructure.ViewModels.Admin.CreateCategory
 {
-    public class CategoryCreateViewModel
+    public class CategoryCreateDTO
     {
-        public CategoryCreateViewModel()
+        public CategoryCreateDTO()
         {
             AllChildrenCategories = new List<SelectListItem>();
             ChildIds = new List<int>();

@@ -15,24 +15,18 @@ namespace Ebay.Presentation.Services
         {
             _categoryRepository = categoryRepository;
         }
-        /// <summary>
-        ///  Method <c>CreateDropdownCategory</c> gets the <c>List<SelectedListItem></c> for visualization 
-        ///  dropdown menu in UI.
-        /// </summary>
-        /// <returns>
-        ///     <c>List of SelectedListItems.</c> entity.
-        /// </returns>
-        public async Task<List<SelectListItem>> CreateDropdownCategory()
+        
+        /*public async Task<List<SelectListItem>> CreateDropdownCategory(IEnumerable<Category> productCategories)
         {
 
-            var productCategories = await _categoryRepository.GetAll();
+            //var productCategories = await _categoryRepository.GetAll();
 
             return productCategories.Select(item => new SelectListItem
             {
                 Text = item.Name,
                 Value = item.Id.ToString()
             }).ToList(); ;
-        }
+        }*/
         /// <summary>
         ///  Method <c>GetSelectedCategories</c> gets <c>ProductCreateViewModel</c> and returns 
         ///  all categories which are related to this product.
@@ -43,7 +37,7 @@ namespace Ebay.Presentation.Services
         /// <returns>
         ///     <c>List<Category></c> entity, which represents all categories related to the product.
         /// </returns>
-        public List<Category> GetSelectedCategories(ProductCreateViewModel viewModel)
+        public List<Category> GetSelectedCategories(ProductCreateDTO viewModel)
         {
             return viewModel.CategoriesIds
                 .Select(async item => await _categoryRepository.Get(item))
@@ -58,7 +52,7 @@ namespace Ebay.Presentation.Services
             return categories.AsQueryable().Count();
         }
 
-        public async Task<Category> FromCreateDtoToCategory(CategoryCreateViewModel categoryViewModel)
+        /*public async Task<Category> FromCreateDtoToCategory(CategoryCreateDTO categoryViewModel, List<Category> childCategories)
         {
             var category = new Category
             {
@@ -66,22 +60,12 @@ namespace Ebay.Presentation.Services
                 Name = categoryViewModel.Name,
                 Description = categoryViewModel.Description,
             };
-            var childCategories = new List<Category>();
-            if(categoryViewModel.ChildIds != null)
-            {
-                foreach (var childId in categoryViewModel.ChildIds)
-                {
-                    var childCategory = await _categoryRepository.Get(childId);
-                    childCategories.Add(childCategory);
-                }
-            }
-            
 
             category.Categories = childCategories;
             return category;
-        }
+        }*/
 
-        public async Task<CategoryCreateViewModel> FromCategoryToCreateDto(Category category)
+       /* public async Task<CategoryCreateDTO> FromCategoryToCreateDto(Category category)
         {
             List<int> selectedItemsId = new List<int>();
             if (category.Categories != null)
@@ -89,7 +73,7 @@ namespace Ebay.Presentation.Services
                 selectedItemsId = category.Categories.Select(category => category.Id).ToList();
             }
             
-            var categoryCreateView = new CategoryCreateViewModel
+            var categoryCreateView = new CategoryCreateDTO
             {
                 Id = category.Id,
                 Name = category.Name,
@@ -102,6 +86,6 @@ namespace Ebay.Presentation.Services
                 selectedItemsId.Contains(int.Parse(selectedElement.Value)));
 
             return categoryCreateView;
-        }
+        }*/
     }
 }

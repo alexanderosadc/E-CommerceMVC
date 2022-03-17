@@ -13,22 +13,6 @@ namespace Ebay.Presentation.Services
         {
             _discountRepository = discountRepository;
         }
-        /// <summary>
-        ///  Method <c>CreateDropdownDiscounts</c> creates dropodown list of all discounts for the UI.
-        /// </summary>
-        /// <returns>
-        ///     <c>List<SelectedListItem></c> which is used on visualization in UI.
-        /// </returns>
-        /*public async Task<List<SelectListItem>> CreateDropdownDiscounts(IEnumerable<Discount> productCategories)
-        {
-            //var productCategories = await _discountRepository.GetAll();
-
-            return productCategories.Select(item => new SelectListItem
-            {
-                Text = item.Name + " = " + item.DiscountPercent.ToString() + "%",
-                Value = item.Id.ToString()
-            }).ToList(); ;
-        }*/
 
         public DiscountViewDTO FromDiscountToDto(Discount discount)
         {

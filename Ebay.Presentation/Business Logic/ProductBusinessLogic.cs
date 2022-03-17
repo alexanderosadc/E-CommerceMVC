@@ -1,6 +1,7 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Presentation.Helpers;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Business_Logic
 {
-    public class ProductBusinessLogic
+    public class ProductBusinessLogic : IProductBL
     {
         private readonly IRepository<Product> _productRepository;
  //       private readonly IRepository<CartItem> _cartItemRepository;
@@ -63,7 +64,7 @@ namespace Ebay.Presentation.Business_Logic
             _productCategoryService = new ProductCategoryService(_productCategoryRepository);
             _productDiscountService = new ProductDiscountService(_productDiscountRepository);
         }
-        public async Task DeleteProduct(int id)
+        public async Task Delete(int id)
         {
             var product = await _productRepository.Get(id);
             if (product != null)
@@ -111,7 +112,7 @@ namespace Ebay.Presentation.Business_Logic
         /// <returns>
         ///     <c>ProductCreateViewModel</c> entity.
         /// </returns>
-        public async Task<ProductCreateDTO> GetCreateProductView()
+        public async Task<ProductCreateDTO> GetProductCreateView()
         {
             ProductCreateDTO productCreateViewModel = new ProductCreateDTO();
             var productCategories = await _categoryRepository.GetAll();
@@ -129,7 +130,7 @@ namespace Ebay.Presentation.Business_Logic
         /// <param name="productCreateViewModel">
         ///     The product which will be Inserted in the Database.
         /// </param>
-        public async Task PostCreateProductViewModel(ProductCreateDTO productCreateViewModel)
+        public async Task PostCreateProductDTO(ProductCreateDTO productCreateViewModel)
         {
             var product = await CreateProductForDb(productCreateViewModel, true);
             await _productRepository.Insert(product);
@@ -172,9 +173,9 @@ namespace Ebay.Presentation.Business_Logic
         /// <c>async</c> method <c>UpdateProduct</c> updates specified <c>Product</c> entity in the repository.
         /// </summary>
         /// <param name="viewModel">Model which is sent from the controller</param>
-        public async Task UpdateProduct(ProductCreateDTO viewModel)
+        public async Task UpdateProduct(ProductCreateDTO dto)
         {
-            var product = await CreateProductForDb(viewModel, false);
+            var product = await CreateProductForDb(dto, false);
             await _productRepository.Update(product);
         }
         /// <summary>
@@ -189,7 +190,7 @@ namespace Ebay.Presentation.Business_Logic
         /// <returns>
         ///     <c>Product</c> entity.
         /// </returns>
-        private async Task<Product> CreateProductForDb(ProductCreateDTO productCreateViewModel, bool isProductForInserting)
+        public async Task<Product> CreateProductForDb(ProductCreateDTO productCreateViewModel, bool isProductForInserting)
         {
             await _productCategoryService.DeleteAll(productCreateViewModel.Id);
             await _productDiscountService.DeleteAll(productCreateViewModel.Id);

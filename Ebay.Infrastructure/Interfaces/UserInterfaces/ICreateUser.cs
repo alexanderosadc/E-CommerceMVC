@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ebay.Infrastructure.Service.UnitOfWork
+namespace Ebay.Infrastructure.Interfaces.UserInterfaces
 {
-    public class BaseService
+    public interface ICreateUser
     {
     }
 }

@@ -1,12 +1,13 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Presentation.Helpers;
 using Ebay.Presentation.Services;
 
 namespace Ebay.Presentation.Business_Logic
 {
-    public class DiscountBusinessLogic
+    public class DiscountBusinessLogic : IDiscountBL
     {
         private readonly IRepository<Discount> _discountRepository;
         private readonly DiscountService _discountService;
@@ -48,7 +49,7 @@ namespace Ebay.Presentation.Business_Logic
             await _discountRepository.Update(product);
         }
 
-        public async Task DeleteDiscount(int itemId)
+        public async Task Delete(int itemId)
         {
             var discount = await _discountRepository.Get(itemId);
             await _discountRepository.Delete(discount);

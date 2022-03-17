@@ -18,8 +18,6 @@ namespace Ebay.Infrastructure.ViewModels.Admin.CreateCategory
         public int Id { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        /*public int? ParentId { get; set; }
-        public List<SelectListItem> AllParentCategories = new List<SelectListItem>();*/
         public List<int>? ChildIds { get; set;}
         public List<SelectListItem> AllChildrenCategories;
     }

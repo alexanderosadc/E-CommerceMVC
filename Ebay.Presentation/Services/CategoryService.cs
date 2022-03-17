@@ -16,17 +16,6 @@ namespace Ebay.Presentation.Services
             _categoryRepository = categoryRepository;
         }
         
-        /*public async Task<List<SelectListItem>> CreateDropdownCategory(IEnumerable<Category> productCategories)
-        {
-
-            //var productCategories = await _categoryRepository.GetAll();
-
-            return productCategories.Select(item => new SelectListItem
-            {
-                Text = item.Name,
-                Value = item.Id.ToString()
-            }).ToList(); ;
-        }*/
         /// <summary>
         ///  Method <c>GetSelectedCategories</c> gets <c>ProductCreateViewModel</c> and returns 
         ///  all categories which are related to this product.
@@ -51,41 +40,5 @@ namespace Ebay.Presentation.Services
             var categories = await _categoryRepository.GetAll();
             return categories.AsQueryable().Count();
         }
-
-        /*public async Task<Category> FromCreateDtoToCategory(CategoryCreateDTO categoryViewModel, List<Category> childCategories)
-        {
-            var category = new Category
-            {
-                Id = categoryViewModel.Id,
-                Name = categoryViewModel.Name,
-                Description = categoryViewModel.Description,
-            };
-
-            category.Categories = childCategories;
-            return category;
-        }*/
-
-       /* public async Task<CategoryCreateDTO> FromCategoryToCreateDto(Category category)
-        {
-            List<int> selectedItemsId = new List<int>();
-            if (category.Categories != null)
-            {
-                selectedItemsId = category.Categories.Select(category => category.Id).ToList();
-            }
-            
-            var categoryCreateView = new CategoryCreateDTO
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description,
-                AllChildrenCategories = await CreateDropdownCategory()
-            };
-
-            categoryCreateView.AllChildrenCategories
-                .ForEach(selectedElement => selectedElement.Selected =
-                selectedItemsId.Contains(int.Parse(selectedElement.Value)));
-
-            return categoryCreateView;
-        }*/
     }
 }

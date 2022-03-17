@@ -1,7 +1,9 @@
 ﻿using Ebay.Domain.Entities;
+using Ebay.Infrastructure.ViewModels;
 using Ebay.Infrastructure.ViewModels.Admin.CreateCategory;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
+using Ebay.Infrastructure.ViewModels.Admin.Users;
 
 namespace Ebay.Presentation.Helpers
 {
@@ -136,6 +138,9 @@ namespace Ebay.Presentation.Helpers
 
         public static async Task<CategoryCreateDTO> ToCategoryCreateDTO(Category category, IEnumerable<Category> childCategories)
         {
+            if (category == null)
+                throw new ArgumentNullException(nameof(category));
+
             List<int> selectedItemsId = new List<int>();
             selectedItemsId = category.Categories.Select(category => category.Id).ToList();
 
@@ -156,6 +161,9 @@ namespace Ebay.Presentation.Helpers
 
         public static Category ToCategory(CategoryCreateDTO dto, List<Category> childCategories)
         {
+            if(dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
             return new Category
             {
                 Id = dto.Id,

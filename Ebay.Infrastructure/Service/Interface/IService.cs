@@ -1,4 +1,4 @@
-﻿using Ebay.Infrastructure.Service.UnitOfWork;
+﻿using Ebay.Domain.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ebay.Infrastructure.Service.Interface
 {
-    public interface IService<T> where T : BaseService
+    public interface IService<T> where T : BaseEntity
     {
         public Task<int> GetNumberOfRecords();
         public Task<IEnumerable<T>> GetAllRecords();

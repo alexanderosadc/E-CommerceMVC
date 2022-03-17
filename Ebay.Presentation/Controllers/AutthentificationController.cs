@@ -23,7 +23,7 @@ namespace Ebay.Presentation.Controllers
 
         public IActionResult LogIn()
         {
-            AppUserDTO appUser = new AppUserDTO();
+            AppUserLogInDTO appUser = new AppUserLogInDTO();
             return View(appUser);
         }
 
@@ -42,10 +42,7 @@ namespace Ebay.Presentation.Controllers
                         var signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
                         if (signInResult.Succeeded)
                         {
-                            if (signInResult.Succeeded)
-                            {
-                                return RedirectToAction(nameof(Index), "Admin");
-                            }
+                            return RedirectToAction(nameof(Index), "Admin");
                         }
                     }
                     else

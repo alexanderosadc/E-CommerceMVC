@@ -22,7 +22,7 @@ namespace Ebay.Presentation.Services
         {
             var discountValue = ((currentPrice * discountsSum) / 100);
 
-            return currentPrice - discountValue;
+            return currentPrice - discountValue;    
         }
         /// <summary>
         ///  Method <c>GetNumberOfRecords</c> gets number of all records in the <c>Product</c> table in the database.

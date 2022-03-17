@@ -1,5 +1,6 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin;
 using Ebay.Infrastructure.ViewModels.Admin.CreateCategory;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Business_Logic
 {
-    public class CategoryBusinessLogic
+    public class CategoryBusinessLogic : ICategoryBL
     {
         private readonly IRepository<Category> _categoryRepository;
         private readonly CategoryService _categoryService;
@@ -46,12 +47,6 @@ namespace Ebay.Presentation.Business_Logic
         {
             CategoryCreateDTO categoryCreateViewModel = new CategoryCreateDTO();
             categoryCreateViewModel.Id = await _categoryService.GetNumberOfRecords() + 1;
-            //categoryCreateViewModel.AllParentCategories = await _categoryService.CreateDropdownCategory();
-            /*categoryCreateViewModel.AllParentCategories.Add(new SelectListItem
-            {
-                Text = "None",
-                Value = null
-            });*/
             var productCategories = await _categoryRepository.GetAll();
             categoryCreateViewModel.AllChildrenCategories = await DropdownHelper.CreateDropdownCategory(productCategories);
 
@@ -81,13 +76,13 @@ namespace Ebay.Presentation.Business_Logic
             await _categoryRepository.Update(category);
         }
 
-        public async Task DeleteCategory(int itemId)
+        public async Task Delete(int itemId)
         {
             var category = await _categoryRepository.Get(itemId);
             await _categoryRepository.Delete(category);
         }
 
-        private async Task<List<Category>> GetChildCategories(CategoryCreateDTO dto)
+        public async Task<List<Category>> GetChildCategories(CategoryCreateDTO dto)
         {
             var childCategories = new List<Category>();
             if (dto.ChildIds != null)

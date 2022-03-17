@@ -13,15 +13,18 @@ namespace Ebay.Infrastructure.ViewModels.Admin.CreateProduct
     {
         public int Id { get; set; }
 
+        [DataType(DataType.Text)]
         [Required(ErrorMessage = "Please enter product name")]
         public string? Name { get; set; }
 
+        [DataType(DataType.Text)]
         [Required(ErrorMessage = "Please enter product description")]
         public string? Description { get; set; }
 
         [Required(ErrorMessage = "Please enter total quantity of product description")]
         public int TotalQuantity { get; set; }
 
+        [DataType(DataType.Currency)]
         [Required(ErrorMessage = "Please enter price per unit")]
         public double Price { get; set; }
         public List<int> CategoriesIds { get; set; } = new List<int>();

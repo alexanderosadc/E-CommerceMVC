@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ebay.Infrastructure.ViewModels.Admin.Users;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Ebay.Infrastructure.Interfaces.UserInterfaces
 {
     public interface IEditUser
     {
+        public Task EditUser(bool isModerator, string userId);
     }
 }

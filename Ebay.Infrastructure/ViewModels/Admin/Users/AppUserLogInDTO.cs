@@ -4,11 +4,12 @@ namespace Ebay.Infrastructure.ViewModels
 {
     public class AppUserLogInDTO
     {
-        [Required(ErrorMessage = "Introduce your User Name")]
+        [DataType(DataType.Text)]
+        [Required(ErrorMessage = "Introduct Username")]
         public string UserName { get; set; }
 
+        [DataType(DataType.Password)]
         [Required(ErrorMessage = "Introduce your Password")]
         public string Password { get; set; }
-        public bool RememberMe { get; set; } = false;
     }
 }

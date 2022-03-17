@@ -49,9 +49,9 @@ namespace Ebay.Presentation.Business_Logic
             await _discountRepository.Update(product);
         }
 
-        public async Task Delete(int itemId)
+        public async Task Delete(string itemId)
         {
-            var discount = await _discountRepository.Get(itemId);
+            var discount = await _discountRepository.Get(int.Parse(itemId));
             await _discountRepository.Delete(discount);
         }
     }

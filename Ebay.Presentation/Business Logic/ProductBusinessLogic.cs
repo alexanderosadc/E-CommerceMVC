@@ -64,9 +64,9 @@ namespace Ebay.Presentation.Business_Logic
             _productCategoryService = new ProductCategoryService(_productCategoryRepository);
             _productDiscountService = new ProductDiscountService(_productDiscountRepository);
         }
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
-            var product = await _productRepository.Get(id);
+            var product = await _productRepository.Get(int.Parse(id));
             if (product != null)
             {
                 await _productRepository.Delete(product);

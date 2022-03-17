@@ -13,6 +13,7 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Users
             UserRoles = new List<string>();
         }
         public string Id { get; set; }
+
         public string UserName { get; set; }
         public int UserRolesId { get; set; }
         public IList<string> UserRoles;

@@ -1,0 +1,41 @@
+﻿@using Ebay.Infrastructure.ViewModels.Admin.Users
+
+@model AppUserCreateDTO
+
+<div class="text-danger" asp-validation-summary=All></div>
+<form method="post" asp-controller="Admin" asp-action="CreateUser">
+        <div class="form-group">
+            <label asp-for="UserName"></label>
+            <input type="text" asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input type="email" asp-for="Email" class="form-control" ></input>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input type="password" asp-for="Password" class="form-control" ></input>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmedPassword"></label>
+            <input type="password" asp-for="ConfirmedPassword" class="form-control" ></input>
+            <span asp-validation-for="ConfirmedPassword" class="text-danger"></span>
+        </div>
+
+      @*  <div class="form-group">
+            <label>Select Parent Category of Product</label>
+            <select class="dropdown-item" asp-for="ParentId" asp-items=@Model.AllParentCategories></select>
+        </div>*@
+       <div class="form-group">
+            <label asp-for="IsModerator"></label>
+            <input asp-for="IsModerator"  class="form-check-input"/>
+            <span asp-validation-for="IsModerator" class="text-danger"></span>
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+</form>

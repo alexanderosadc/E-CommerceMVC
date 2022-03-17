@@ -4,6 +4,7 @@ using Ebay.Infrastructure.Persistance;
 using Ebay.Infrastructure.ViewModels;
 using Ebay.Infrastructure.ViewModels.Admin.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ebay.Presentation.Business_Logic
@@ -13,16 +14,19 @@ namespace Ebay.Presentation.Business_Logic
         private readonly AppDbContext _context;
         private readonly DbSet<User> _users;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _rolesManager;
-        public UserBusinessLogic(AppDbContext context)
+        public UserBusinessLogic(
+            AppDbContext context,
+            UserManager<User> userManager)
         {
+            _userManager = userManager;
             _context = context;
             _users = _context.Set<User>();
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
-            var user = await _users.FindAsync(id);
+            
+            var user = await _userManager.FindByIdAsync(id);
             if(user != null)
             {
                 await _userManager.DeleteAsync(user);
@@ -32,9 +36,15 @@ namespace Ebay.Presentation.Business_Logic
         public async Task<List<AppUserViewDTO>> GetUsers()
         {
             var allUsers = await _users.ToListAsync();
-            var usersDTO = allUsers.Select(async user => await ToUserView(user)).ToList();
-            var results = usersDTO.Select(user => user.Result).ToList();
-            return results;
+            List<AppUserViewDTO> appUserViewDTOs = new List<AppUserViewDTO>();
+            foreach (var user in allUsers)
+            {
+                var userView = await ToUserView(user);
+                appUserViewDTOs.Add(userView);
+            }
+            /*var usersDTO = allUsers.Select(async user => await ToUserView(user)).ToList();
+            var results = usersDTO.Select(user => user.Result).ToList();*/
+            return appUserViewDTOs;
         }
 
         public async Task<AppUserViewDTO> ToUserView(User user)
@@ -47,6 +57,57 @@ namespace Ebay.Presentation.Business_Logic
                 Email = user.Email,
                 UserRoles = roles
             };
+        }
+        public async Task<AppUserCreateDTO> GetUserDTO(string itemId)
+        {
+            var user = await _userManager.FindByIdAsync(itemId);
+            var roles = await _userManager.GetRolesAsync(user);
+            bool isModerator = false;
+            if (roles.Contains("moderator"))
+            {
+                isModerator = true;
+            }
+
+            return new AppUserCreateDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                IsModerator = isModerator
+            };
+        }
+        public async Task CreateUser(AppUserCreateDTO dto)
+        {
+            var role = "user";
+            if(dto.Password == dto.ConfirmedPassword)
+            {
+                var user = new User
+                {
+                    UserName = dto.UserName,
+                    Email = dto.Email,
+                };
+
+                if(dto.IsModerator)
+                {
+                    role = "moderator";
+                }
+                await _userManager.CreateAsync(user, dto.Password);
+                await _userManager.AddToRoleAsync(user, role);
+            }
+        }
+
+        public async Task EditUser(bool isModerator, string userId)
+        {
+            string role = "user";
+            var user = await _userManager.FindByIdAsync(userId);
+            List<string> rolesToRemove = new List<string> {"moderator", "user"};
+
+            if(isModerator)
+            {
+                role = "moderator";
+            }
+            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            await _userManager.AddToRoleAsync(user, role);
         }
     }
 }

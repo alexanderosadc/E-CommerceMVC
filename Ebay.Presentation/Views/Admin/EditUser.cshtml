@@ -1,0 +1,37 @@
+﻿@using Ebay.Infrastructure.ViewModels.Admin.Users
+
+@model AppUserCreateDTO
+
+<div class="text-danger" asp-validation-summary=All></div>
+<form method="post" asp-controller="Admin" asp-action="EditUser">
+        <div class="form-group" hidden>
+            <label asp-for="Id"></label>
+            <input type="text" asp-for="Id" class="form-control" />
+        </div>
+        <table class="table table-sm table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <th>UserName</th>
+                    <td>@Model.UserName</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <th>Is Moderator</th>
+                    <td>
+                        <div class="form-group">
+                            <input asp-for="IsModerator"  class="form-check-input"/>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button 
+            asp-route-isModerator="@Model.IsModerator"
+            asp-route-userId="@Model.Id"
+            class="btn btn-primary" type="submit">
+            Save
+        </button>
+</form>

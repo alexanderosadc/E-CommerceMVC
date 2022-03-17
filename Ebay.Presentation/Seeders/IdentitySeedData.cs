@@ -14,6 +14,7 @@ namespace Ebay.Presentation.Seeders
         private const string adminPhone = "12345678";
 
         private const string adminRole = "admin";
+        private const string moderatorRole = "moderator";
         private const string userRole = "user";
 
         public static async void EnsurePopulatedRoles(IApplicationBuilder app)
@@ -44,6 +45,14 @@ namespace Ebay.Presentation.Seeders
                 userAppRole = new IdentityRole();
                 userAppRole.Name = userRole;
                 await roleManager.CreateAsync(userAppRole);
+            }
+
+            IdentityRole moderator = await roleManager.FindByNameAsync(moderatorRole);
+            if(moderator == null)
+            {
+                moderator = new IdentityRole();
+                moderator.Name = moderatorRole;
+                await roleManager.CreateAsync(moderator);
             }
         }
         public static async void EnsurePopulatedUsers(IApplicationBuilder app)

@@ -8,6 +8,6 @@ namespace Ebay.Infrastructure.Interfaces.Shared
 {
     public interface IDeleteEntity
     {
-        public Task Delete(int id);
+        public Task Delete(string id);
     }
 }

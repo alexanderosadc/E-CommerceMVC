@@ -76,9 +76,9 @@ namespace Ebay.Presentation.Business_Logic
             await _categoryRepository.Update(category);
         }
 
-        public async Task Delete(int itemId)
+        public async Task Delete(string itemId)
         {
-            var category = await _categoryRepository.Get(itemId);
+            var category = await _categoryRepository.Get(int.Parse(itemId));
             await _categoryRepository.Delete(category);
         }
 

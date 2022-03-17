@@ -36,8 +36,9 @@ namespace Ebay.Presentation.Controllers
                 
                 if (user != null)
                 {
-                    var userRole = await _userManager.IsInRoleAsync(user, "Admin");
-                    if (userRole == true)
+                    var isAdmin = await _userManager.IsInRoleAsync(user, "admin");
+                    var isModerator = await _userManager.IsInRoleAsync(user, "moderator");
+                    if (isAdmin == true || isModerator == true)
                     {
                         var signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
                         if (signInResult.Succeeded)

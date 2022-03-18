@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ebay.Infrastructure.CustomAttributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,13 +13,17 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
         public int Id { get; set; }
 
         [DataType(DataType.Text)]
-        [Required(ErrorMessage = "Introduct Username")]
+        [Required(ErrorMessage = "Introduce Username")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Introduct Discount Percentage")]
+        [Required(ErrorMessage = "Introduce Discount Percentage")]
         public int DiscountPercent { get; set; }
         public bool IsActive { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+
+        [DateStart]
+        public DateTime StartDate { get; set; }  = DateTime.Now.Date;
+
+        [DateEnd(DateStartPropertyName = "StartDate")]
+        public DateTime EndDate { get; set; } = DateTime.Now.Date;
     }
 }

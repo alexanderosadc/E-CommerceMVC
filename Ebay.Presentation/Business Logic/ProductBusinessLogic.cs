@@ -76,7 +76,9 @@ namespace Ebay.Presentation.Business_Logic
         {
             var product = await _productRepository.Get(id);
             var productView = DTOMapper.ToProductViewDTO(product);
-            var discountSum = productView.DiscountViews.Sum(item => item.DiscountPercent);
+            var discountSum = productView.DiscountViews
+                .Where(item => item.IsActive == true)
+                .Sum(item => item.DiscountPercent);
 
             productView.FinalPrice = _productService.GetFinalPrice(product.Price, discountSum);
 
@@ -98,7 +100,7 @@ namespace Ebay.Presentation.Business_Logic
             productsViews.ForEach(item => item.FinalPrice =
                 _productService.GetFinalPrice(
                     item.Price,
-                    item.DiscountViews.Sum(item => item.DiscountPercent)
+                    item.DiscountViews.Where(item => item.IsActive == true).Sum(item => item.DiscountPercent)
                     )
                 );
 

@@ -50,7 +50,7 @@ namespace Ebay.Presentation.Controllers
                     {
                         ModelState.AddModelError("", "You do not have admin rights to enter the system");
                     }
-                } 
+                }
             }
             return RedirectToAction(nameof(LogIn));
         }

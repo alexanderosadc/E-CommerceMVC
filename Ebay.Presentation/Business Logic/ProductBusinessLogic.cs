@@ -211,6 +211,17 @@ namespace Ebay.Presentation.Business_Logic
             
             product.ProductCategories = createdProductCategory;
             product.ProductDiscounts = createdProductDiscounts;
+
+            var photos = productCreateViewModel.Photos
+                .Select(item => 
+                    new Photo
+                    {
+                        Name = item.FileName,
+                        BinaryData = FileHelper.TransformToBinary(item)
+                    });
+
+            product.Photos = photos.ToList();
+
             return product;
         }
     }

@@ -3,7 +3,7 @@
 @model ProductCreateDTO
 
 <div class="text-danger" asp-validation-summary=All></div>
-<form method="post" asp-controller="Admin" asp-action="UpdateProduct">
+<form method="post" asp-controller="Admin" asp-action="UpdateProduct" enctype="multipart/form-data">
         <div class="form-group">
             <label>ID</label>
             <input class="form-control" hidden asp-for=Id value=@Model.Id />
@@ -41,6 +41,12 @@
         <div>
             <label>Select Discounts</label>
             <select multiple class="dropdown-item" asp-for="DiscountIds" asp-items=@Model.DiscountItems></select>
+        </div>
+
+        <div>
+            <label>Select Product Photos</label>
+            <input asp-for="Photos" class="form-control" accept=".jpg,.jpeg,.png"/>
+            <span asp-validation-for="Photos" class="text-danger"></span>
         </div>
 
         <button class="btn btn-primary" type="submit">Save</button>

@@ -84,6 +84,7 @@ namespace Ebay.Presentation.Helpers
                 CategoryNames = product.ProductCategories.Select(productCat => productCat.Category.Name).ToList(),
                 DiscountViews = product.ProductDiscounts
                     .Select(productDisc => ToDiscountViewDTO(productDisc.Discount)),
+                Photos = product.Photos
             };
         }
 
@@ -172,5 +173,13 @@ namespace Ebay.Presentation.Helpers
                 Categories = childCategories
             };
         }
+
+        /*public static List<Photo> ToPhoto(List<IFormFile> files)
+        {
+            var photos = files.Select(item => new Photo
+            {
+                Name = item.FileName,
+            });
+        }*/
     }
 }

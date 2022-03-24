@@ -23,21 +23,40 @@
         <tr>
             <th>Categories of Products</th>
             <td>
-                        @foreach(var name in @Model.CategoryNames)
-                        { 
-                            <span>@name,</span>
-                            <br />
-                        }
+                @foreach(var name in @Model.CategoryNames)
+                { 
+                    <span>@name,</span>
+                    <br />
+                }
            </td>
         </tr>
         <tr>
             <th>Discounts Applied</th>
             <td>
-                        @foreach(var discount in @Model.DiscountViews)
-                        { 
-                            <span>@discount.Name = @discount.DiscountPercent %,</span>
-                            <br />
-                        }
+                @foreach(var discount in @Model.DiscountViews)
+                { 
+                    <span>@discount.Name = @discount.DiscountPercent %,</span>
+                    <br />
+                }
+           </td>
+        </tr>
+        <tr>
+            <th>Photos</th>
+            <td>
+                
+                @foreach(var photo in @Model.Photos)
+                { 
+                    <div 
+                        class="bg-image hover-overlay ripple shadow-1-strong rounded"
+                        data-ripple-color="light"
+                    >
+                        <img class="w-100"  src="data:image/png;base64,@Convert.ToBase64String(photo.BinaryData)" alt="@photo.Name" />
+                        <span>@photo.Name</span>
+                    </div>
+                    <div>
+                        
+                    </div>
+                }
            </td>
         </tr>
         <tr>

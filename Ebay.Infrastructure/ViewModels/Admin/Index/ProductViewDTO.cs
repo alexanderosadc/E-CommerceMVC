@@ -1,4 +1,5 @@
 ﻿using Ebay.Domain.Entities;
+using Ebay.Infrastructure.CustomAttributes;
 
 namespace Ebay.Infrastructure.ViewModels.Admin.Index
 {
@@ -14,5 +15,7 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
         public IEnumerable<string>? CategoryNames { get; set; }
 
         public IEnumerable<DiscountViewDTO>? DiscountViews { get; set; }
+        
+        public IEnumerable<Photo> Photos;
     }
 }

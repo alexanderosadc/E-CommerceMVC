@@ -212,7 +212,7 @@ namespace Ebay.Presentation.Business_Logic
             product.ProductCategories = createdProductCategory;
             product.ProductDiscounts = createdProductDiscounts;
 
-            var photos = productCreateViewModel.Photos
+            var photos = productCreateViewModel.Files
                 .Select(item => 
                     new Photo
                     {
@@ -223,6 +223,14 @@ namespace Ebay.Presentation.Business_Logic
             product.Photos = photos.ToList();
 
             return product;
+        }
+
+        public async Task DeletePhoto(string id)
+        {
+            var photo = await _photoRepository.Get(int.Parse(id));
+            if (photo == null)
+                throw new ArgumentException("Product with this id does not exist");
+            await _photoRepository.Delete(photo);
         }
     }
 }

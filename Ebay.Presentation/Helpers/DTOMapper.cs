@@ -57,6 +57,7 @@ namespace Ebay.Presentation.Helpers
                 Description = product.Description,
                 TotalQuantity = product.Quantity,
                 Price = product.Price,
+                Photos = product.Photos.ToList(),
             };
         }
 

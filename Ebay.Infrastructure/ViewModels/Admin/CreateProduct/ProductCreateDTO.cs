@@ -1,4 +1,5 @@
-﻿using Ebay.Infrastructure.CustomAttributes;
+﻿using Ebay.Domain.Entities;
+using Ebay.Infrastructure.CustomAttributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -36,8 +37,9 @@ namespace Ebay.Infrastructure.ViewModels.Admin.CreateProduct
 
         public List<SelectListItem> DiscountItems = new List<SelectListItem>();
 
-        [AllowedExtensions(Extensions = new string[] { ".jpg", ".png", ".jpeg" }, FileListName = "Photos")]
-        [MaxFileSize(MaxFileSize = 200 * 200 * 3, FileListName = "Photos")]
-        public List<IFormFile> Photos { get; set; }
+        [AllowedExtensions(Extensions = new string[] { ".jpg", ".png", ".jpeg" }, FileListName = "Files")]
+        [MaxFileSize(MaxFileSize = 200 * 200 * 3, FileListName = "Files")]
+        public List<IFormFile> Files { get; set; }
+        public List<Photo>? Photos { get; set; }
     }
 }

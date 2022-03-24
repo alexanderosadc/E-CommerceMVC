@@ -33,21 +33,57 @@
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
 
+        <br />
+        <hr /> 
+
         <div>
             <label>Select Categories of Product</label>
             <select multiple class="dropdown-item" asp-for="CategoriesIds" asp-items=@Model.CategoryResponseItems></select>
         </div>
+
+        <br />
+        <hr /> 
 
         <div>
             <label>Select Discounts</label>
             <select multiple class="dropdown-item" asp-for="DiscountIds" asp-items=@Model.DiscountItems></select>
         </div>
 
+        <br />
+        <hr />  
         <div>
             <label>Select Product Photos</label>
-            <input asp-for="Photos" class="form-control" accept=".jpg,.jpeg,.png"/>
-            <span asp-validation-for="Photos" class="text-danger"></span>
+            <input asp-for="Files" class="form-control" accept=".jpg,.jpeg,.png"/>
+            <span asp-validation-for="Files" class="text-danger"></span>
         </div>
-
+        <div class="row form-group">
+                @foreach(var photo in @Model.Photos)
+                {
+                      <div class="col-lg-4">
+                        <div class="card">
+                          <img
+                            src="data:image/png;base64,@Convert.ToBase64String(photo.BinaryData)"
+                            class="card-img-top"
+                            alt="Waterfall"
+                          />
+                          <div class="card-body">
+                            <h5 class="card-title">@photo.Name</h5>
+                            @*<p class="card-text">
+                              Some quick example text to build on the card title and make up the bulk
+                              of the card's content.
+                            </p>*@
+                            <a   class="btn btn-danger" asp-controller="Admin" 
+                                asp-action="DeletePhoto"
+                                asp-route-product = "@Model"
+                                asp-route-itemId = "@photo.Id">
+                                Delete Photo
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                }
+                </div>
+        <br />
+        <hr /> 
         <button class="btn btn-primary" type="submit">Save</button>
 </form>

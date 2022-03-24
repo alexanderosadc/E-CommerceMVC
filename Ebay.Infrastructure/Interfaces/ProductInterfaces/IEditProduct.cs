@@ -11,5 +11,6 @@ namespace Ebay.Infrastructure.Interfaces.ProductInterfaces
     {
         public Task<ProductCreateDTO> GetEditProductView(int itemId);
         public Task UpdateProduct(ProductCreateDTO dto);
+        public Task DeletePhoto(string id);
     }
 }

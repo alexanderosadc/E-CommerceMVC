@@ -251,16 +251,18 @@ namespace Ebay.Presentation.Controllers
 
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteUser(string itemId)
-        {
+        { 
             await _userBusinessLogic.Delete(itemId);
             return RedirectToAction(nameof(ShowUsers));
         }
 
         [Authorize(Roles = "moderator,admin")]
-        public async Task<IActionResult> DeletePhoto(string itemId, AppUserCreateDTO product)
+        public async Task<IActionResult> DeletePhoto(string itemId, string modelId)
         {
             await _productBusinessLogic.DeletePhoto(itemId);
-            return View(nameof(EditProduct), product);
+            var productCreateView = await _productBusinessLogic
+                                            .GetEditProductView(int.Parse(modelId));
+            return View(nameof(EditProduct), productCreateView);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace Ebay.Domain.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<T> Get(int id);
-        Task Insert(T entity);
-        Task Update(T entity);
-        Task Delete(T entity);
+        public Task<IEnumerable<T>> GetAll();
+        public Task<T> Get(int id);
+        public Task Insert(T entity);
+        public Task Update(T entity);
+        public Task Delete(T entity);
     }
 }

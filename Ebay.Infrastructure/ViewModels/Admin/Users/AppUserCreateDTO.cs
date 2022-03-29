@@ -12,13 +12,19 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Users
     public class AppUserCreateDTO
     {
         public string? Id { get; set; }
+
         [DataType(DataType.Text)]
-        [Required(ErrorMessage = "Introduct Username")]
+        [Required(ErrorMessage = "Introduce Username")]
+        
+        [Remote(action: "IsUsernameAvialiable", controller: "Validation", 
+            HttpMethod = "Get",  
+            ErrorMessage = "Username already exist", 
+            AdditionalFields = nameof(UserName))]
         public string UserName { get; set; }
 
         [DataType(DataType.Password)]
-        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}")]
-        [Required(ErrorMessage = "Introduct password with the length of 8 " +
+        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{8,}", 
+            ErrorMessage = "Introduct password with the length of 8 " +
             "- 1 letter, 1 number and 1 symbol")]
         public string Password { get; set; }
 

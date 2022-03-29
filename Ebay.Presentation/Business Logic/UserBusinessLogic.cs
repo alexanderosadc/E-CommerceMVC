@@ -91,6 +91,7 @@ namespace Ebay.Presentation.Business_Logic
                 {
                     role = "moderator";
                 }
+
                 await _userManager.CreateAsync(user, dto.Password);
                 await _userManager.AddToRoleAsync(user, role);
             }
@@ -109,5 +110,11 @@ namespace Ebay.Presentation.Business_Logic
             await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
             await _userManager.AddToRoleAsync(user, role);
         }
+
+       /* public async Task<bool> IsUserExist(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            return (user != null) ? true : false;
+        }*/
     }
 }

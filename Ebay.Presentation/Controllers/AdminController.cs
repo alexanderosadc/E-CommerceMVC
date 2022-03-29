@@ -21,19 +21,22 @@ namespace Ebay.Presentation.Controllers
         private readonly ICategoryBL _categoryBusinessLogic;
         private readonly IDiscountBL _discountBusinessLogic;
         private readonly IUserBL _userBusinessLogic;
+        private readonly IValidationBL _validationBusinessLogic;
         
         // Services declaration
         public AdminController(
             IProductBL productBusinessLogic,
             ICategoryBL categoryBusinessLogic,
             IDiscountBL discountBusinessLogic,
-            IUserBL userBusinessLogic
+            IUserBL userBusinessLogic,
+            IValidationBL validationBusinessLogic
             )
         {
             _productBusinessLogic = productBusinessLogic;
             _categoryBusinessLogic = categoryBusinessLogic;
             _discountBusinessLogic = discountBusinessLogic;
             _userBusinessLogic = userBusinessLogic;
+            _validationBusinessLogic = validationBusinessLogic;
         }
 
         [Authorize(Roles = "moderator,admin")]
@@ -224,11 +227,20 @@ namespace Ebay.Presentation.Controllers
         {
             if(ModelState.IsValid)
             {
+                var validationErrors = await _validationBusinessLogic.ValidateUser(dto.UserName, dto.Email);
+                if(validationErrors.Count > 0)
+                {
+                    foreach(var error in validationErrors)
+                    {
+                        ModelState.AddModelError(error.Key, error.Value);
+                    }
+                    return View(nameof(CreateUser), dto);
+                }
                 await _userBusinessLogic.CreateUser(dto);
                 return RedirectToAction(nameof(ShowUsers));
             }
             
-            return View(nameof(CreateUser));
+            return View(nameof(CreateUser), dto);
         }
 
         [Authorize(Roles = "admin")]

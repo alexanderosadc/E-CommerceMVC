@@ -28,6 +28,7 @@ builder.Services.AddScoped(typeof(IProductBL), typeof(ProductBusinessLogic));
 builder.Services.AddScoped(typeof(ICategoryBL), typeof(CategoryBusinessLogic));
 builder.Services.AddScoped(typeof(IDiscountBL), typeof(DiscountBusinessLogic));
 builder.Services.AddScoped(typeof(IUserBL), typeof(UserBusinessLogic));
+builder.Services.AddScoped(typeof(IValidationBL), typeof(ValidationBusinessLogic));
 
 builder.Services.ConfigureApplicationCookie(config =>
 {

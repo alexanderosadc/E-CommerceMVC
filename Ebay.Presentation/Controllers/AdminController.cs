@@ -90,14 +90,20 @@ namespace Ebay.Presentation.Controllers
 
         [Authorize(Roles = "moderator,admin")]
         [HttpPost]
-        public async Task<IActionResult> UpdateProduct(ProductCreateDTO modelView)
+        public async Task<IActionResult> UpdateProduct(ProductCreateDTO dto)
         {
             if (ModelState.IsValid)
             {
-                await _productBusinessLogic.UpdateProduct(modelView);
+                await _productBusinessLogic.UpdateProduct(dto);
                 return RedirectToAction(nameof(Index));
             }
-            return RedirectToAction(nameof(EditProduct), new {itemId = modelView.Id});
+            //return RedirectToAction(nameof(EditProduct), new {itemId = modelView.Id});
+            var dropdownCategories = await _categoryBusinessLogic.GetDropdownCategories();
+            var dropdownDiscounts = await _discountBusinessLogic.GetDropdownDiscounts();
+
+            dto.CategoryResponseItems = dropdownCategories;
+            dto.DiscountItems = dropdownDiscounts;
+            return View(nameof(EditProduct), dto);
         }
 
         [Authorize(Roles = "moderator,admin")]
@@ -171,7 +177,7 @@ namespace Ebay.Presentation.Controllers
                 return RedirectToAction(nameof(ShowCategories));
             }
 
-            return RedirectToAction(nameof(EditCategory), new {itemId = categoryCreateViewModel .Id});
+            return RedirectToAction(nameof(EditCategory), new {itemId = categoryCreateViewModel.Id});
         }
 
         [Authorize(Roles = "admin")]

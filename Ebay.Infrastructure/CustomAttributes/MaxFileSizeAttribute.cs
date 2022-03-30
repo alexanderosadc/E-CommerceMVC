@@ -19,6 +19,9 @@ namespace Ebay.Infrastructure.CustomAttributes
                 throw new ArgumentException("Property with this name not found");
 
             var files = fileListProperty.GetValue(validationContext.ObjectInstance) as List<IFormFile>;
+            if (files == null)
+                return ValidationResult.Success;
+
             foreach (var item in files)
             {
                 var file = item as IFormFile;

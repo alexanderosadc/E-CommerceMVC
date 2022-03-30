@@ -1,4 +1,5 @@
 ﻿using Ebay.Infrastructure.ViewModels.Admin.Index;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Ebay.Infrastructure.Interfaces.DiscountInterfaces
     {
         public Task<DiscountViewDTO> GetDiscountDTO();
         public Task<IEnumerable<DiscountViewDTO>> GetDiscountsDTO();
+        public Task<List<SelectListItem>> GetDropdownDiscounts();
     }
 }

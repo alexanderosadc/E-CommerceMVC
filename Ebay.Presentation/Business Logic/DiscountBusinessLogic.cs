@@ -4,6 +4,7 @@ using Ebay.Infrastructure.Interfaces;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Presentation.Helpers;
 using Ebay.Presentation.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Business_Logic
 {
@@ -53,6 +54,12 @@ namespace Ebay.Presentation.Business_Logic
         {
             var discount = await _discountRepository.Get(int.Parse(itemId));
             await _discountRepository.Delete(discount);
+        }
+
+        public async Task<List<SelectListItem>> GetDropdownDiscounts()
+        {
+            var discounts = await _discountRepository.GetAll();
+            return await DropdownHelper.CreateDropdownDiscounts(discounts);
         }
     }
 }

@@ -95,5 +95,11 @@ namespace Ebay.Presentation.Business_Logic
             }
             return childCategories;
         }
+
+        public async Task<List<SelectListItem>> GetDropdownCategories()
+        {
+            var categories = await _categoryRepository.GetAll();
+            return await DropdownHelper.CreateDropdownCategory(categories);
+        }
     } 
 } 

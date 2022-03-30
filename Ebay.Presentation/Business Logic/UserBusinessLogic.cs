@@ -11,16 +11,11 @@ namespace Ebay.Presentation.Business_Logic
 {
     public class UserBusinessLogic : IUserBL
     {
-        private readonly AppDbContext _context;
-        private readonly DbSet<User> _users;
         private readonly UserManager<User> _userManager;
         public UserBusinessLogic(
-            AppDbContext context,
             UserManager<User> userManager)
         {
             _userManager = userManager;
-            _context = context;
-            _users = _context.Set<User>();
         }
 
         public async Task Delete(string id)
@@ -35,12 +30,17 @@ namespace Ebay.Presentation.Business_Logic
 
         public async Task<List<AppUserViewDTO>> GetUsers()
         {
-            var allUsers = await _users.ToListAsync();
+            
+            var allUsers = await _userManager.Users.ToListAsync();
+
             List<AppUserViewDTO> appUserViewDTOs = new List<AppUserViewDTO>();
             foreach (var user in allUsers)
             {
                 var userView = await ToUserView(user);
-                appUserViewDTOs.Add(userView);
+                if(!userView.UserRoles.Contains("admin"))
+                {
+                    appUserViewDTOs.Add(userView);
+                }
             }
             /*var usersDTO = allUsers.Select(async user => await ToUserView(user)).ToList();
             var results = usersDTO.Select(user => user.Result).ToList();*/

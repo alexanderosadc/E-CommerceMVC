@@ -1,5 +1,6 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Infrastructure.ViewModels.Admin;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Ebay.Infrastructure.Interfaces.CategoryInterfaces
     public interface IShowCategory
     {
         public Task<IEnumerable<CategoryViewDTO>> GetCategoyDTO();
+        public Task<List<SelectListItem>> GetDropdownCategories();
     }
 }

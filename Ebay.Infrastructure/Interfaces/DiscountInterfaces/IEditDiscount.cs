@@ -11,5 +11,6 @@ namespace Ebay.Infrastructure.Interfaces.DiscountInterfaces
     {
         public Task<DiscountViewDTO> EditDiscount(int itemId);
         public Task UpdateDiscount(DiscountViewDTO discountViewModel);
+        
     }
 }

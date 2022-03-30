@@ -22,7 +22,8 @@ namespace Ebay.Infrastructure.CustomAttributes
 
             var files = fileListProperty.GetValue(validationContext.ObjectInstance) as List<IFormFile>;
             if (files == null)
-                throw new ArgumentException("Files is null");
+                return ValidationResult.Success;
+
             foreach (var item in files)
             {
                 var file = item as IFormFile;

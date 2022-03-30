@@ -40,7 +40,7 @@ namespace Ebay.Infrastructure.ViewModels.Admin.CreateProduct
 
         [AllowedExtensions(Extensions = new string[] { ".jpg", ".png", ".jpeg" }, FileListName = "Files")]
         [MaxFileSize(MaxFileSize = 200 * 200 * 3, FileListName = "Files")]
-        public List<IFormFile> Files { get; set; }
-        public List<Photo>? Photos { get; set; }
+        public List<IFormFile> Files { get; set; } = new List<IFormFile>();
+        public List<Photo>? Photos { get; set; } = new List<Photo>();
     }
 }

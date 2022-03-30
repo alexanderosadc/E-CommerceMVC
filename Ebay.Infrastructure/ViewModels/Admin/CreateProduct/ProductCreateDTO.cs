@@ -13,6 +13,7 @@ namespace Ebay.Infrastructure.ViewModels.Admin.CreateProduct
 {
     public class ProductCreateDTO
     {
+
         public int Id { get; set; }
 
         [DataType(DataType.Text)]
@@ -31,11 +32,11 @@ namespace Ebay.Infrastructure.ViewModels.Admin.CreateProduct
         public double Price { get; set; }
         public List<int> CategoriesIds { get; set; } = new List<int>();
 
-        public List<SelectListItem> CategoryResponseItems = new List<SelectListItem>();
+        public List<SelectListItem> CategoryResponseItems { get; set; } = new List<SelectListItem>();
 
         public List<int> DiscountIds { get; set; } = new List<int>();
 
-        public List<SelectListItem> DiscountItems = new List<SelectListItem>();
+        public List<SelectListItem> DiscountItems { get; set; } = new List<SelectListItem>();
 
         [AllowedExtensions(Extensions = new string[] { ".jpg", ".png", ".jpeg" }, FileListName = "Files")]
         [MaxFileSize(MaxFileSize = 200 * 200 * 3, FileListName = "Files")]

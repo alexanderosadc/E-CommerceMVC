@@ -171,6 +171,7 @@ namespace Ebay.Presentation.Business_Logic
 
             return productCreateView;
         }
+
         /// <summary>
         /// <c>async</c> method <c>UpdateProduct</c> updates specified <c>Product</c> entity in the repository.
         /// </summary>

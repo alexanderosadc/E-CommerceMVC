@@ -56,14 +56,29 @@ namespace Ebay.Presentation.Controllers
 
         [Authorize(Roles = "moderator,admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductCreateDTO modelView)
+        public async Task<IActionResult> CreateProduct(ProductCreateDTO dto)
         {
-            if(ModelState.IsValid)
+            var productCreate = await _productBusinessLogic.GetProductCreateView();
+            dto.CategoryResponseItems = productCreate.CategoryResponseItems;
+            dto.DiscountItems = productCreate.DiscountItems;
+
+            if (ModelState.IsValid)
             {
-                await _productBusinessLogic.PostCreateProductDTO(modelView);
-                return RedirectToAction(nameof(Index));
+                
+                var validationErrors = await _validationBusinessLogic.ValidateProduct(dto.Name);
+                if (validationErrors.Count > 0)
+                {
+                    
+                    foreach (var error in validationErrors)
+                    {
+                        ModelState.AddModelError(error.Key, error.Value);
+                    }
+                    return View(nameof(CreateProduct), dto);
+                }
+                await _productBusinessLogic.PostCreateProductDTO(dto);
+                return RedirectToAction(nameof(Index), dto);
             }
-            return RedirectToAction(nameof(CreateProduct));
+            return View(nameof(CreateProduct), dto);
         }
 
         [Authorize(Roles = "moderator,admin")]
@@ -115,11 +130,23 @@ namespace Ebay.Presentation.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CategoryCreateDTO categoryViewModel)
+        public async Task<IActionResult> CreateCategory(CategoryCreateDTO dto)
         {
-            if(ModelState.IsValid)
+            var categoryCreate = await _categoryBusinessLogic.GetCategoryCreateDTO();
+            dto.AllChildrenCategories = categoryCreate.AllChildrenCategories;
+            if (ModelState.IsValid)
             {
-                await _categoryBusinessLogic.CreateNewCategory(categoryViewModel);
+                var validationErrors = await _validationBusinessLogic.ValidateCategory(dto.Name);
+                if (validationErrors.Count > 0)
+                {
+
+                    foreach (var error in validationErrors)
+                    {
+                        ModelState.AddModelError(error.Key, error.Value);
+                    }
+                    return View(nameof(CreateCategory), dto);
+                }
+                await _categoryBusinessLogic.CreateNewCategory(dto);
                 return RedirectToAction(nameof(ShowCategories));
             }
             
@@ -170,11 +197,20 @@ namespace Ebay.Presentation.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateDiscount(DiscountViewDTO discountViewModel)
+        public async Task<IActionResult> CreateDiscount(DiscountViewDTO dto)
         {
             if (ModelState.IsValid)
             {
-                await _discountBusinessLogic.CreateNewDiscount(discountViewModel);
+                var validationErrors = await _validationBusinessLogic.ValidateDiscount(dto.Name);
+                if (validationErrors.Count > 0)
+                {
+                    foreach (var error in validationErrors)
+                    {
+                        ModelState.AddModelError(error.Key, error.Value);
+                    }
+                    return View(nameof(CreateDiscount), dto);
+                }
+                await _discountBusinessLogic.CreateNewDiscount(dto);
                 return RedirectToAction(nameof(ShowDiscounts));
             }
 

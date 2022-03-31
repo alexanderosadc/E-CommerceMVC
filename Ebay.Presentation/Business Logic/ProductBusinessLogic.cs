@@ -13,14 +13,16 @@ namespace Ebay.Presentation.Business_Logic
 {
     public class ProductBusinessLogic : IProductBL
     {
+        // Constants
+        private const int PageSize = 4;
+
+        // Repositories 
         private readonly IRepository<Product> _productRepository;
- //       private readonly IRepository<CartItem> _cartItemRepository;
 
         private readonly IRepository<Category> _categoryRepository;
 
         private readonly IRepository<Photo> _photoRepository;
         private readonly IRepository<Discount> _discountRepository;
-//        private readonly IRepository<Cart> _cartRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<ProductDiscount> _productDiscountRepository;
 
@@ -90,9 +92,9 @@ namespace Ebay.Presentation.Business_Logic
         /// <returns>
         ///     List of all products in the DB.
         /// </returns>
-        public async Task<IEnumerable<ProductViewDTO>> GetProductsViews()
+        public async Task<ProductViewListDTO> GetProductsViews(int currentPageNumber)
         {
-            var products = await _productRepository.GetAll();
+            var products =  _productRepository.GetFirstValues(currentPageNumber, PageSize);
 
             //var productsViews = _productService.GetProductViewModels(products).ToList();
 
@@ -104,7 +106,16 @@ namespace Ebay.Presentation.Business_Logic
                     )
                 );
 
-            return productsViews;
+            return new ProductViewListDTO
+            {
+                ProductViewsDTO = productsViews,
+                PaginationInfo = new PagingInfo
+                {
+                    TotalItems = await _productRepository.GetNumberOfItems(),
+                    ItemsPerPage = PageSize,
+                    CurrentPage = currentPageNumber,
+                }
+            };
         }
 
         

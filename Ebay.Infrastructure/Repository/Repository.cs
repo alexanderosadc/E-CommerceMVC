@@ -44,5 +44,15 @@ namespace Ebay.Infrastructure.Repository
             _entities.Update(entity);
             await _context.SaveChangesAsync();
         }
+
+        public IEnumerable<T> GetFirstValues(int pageIndex, int pageSize)
+        {
+            return _entities.Skip((pageIndex - 1) * pageSize).Take(pageSize);
+        }
+
+        public async Task<int> GetNumberOfItems()
+        {
+            return await _entities.CountAsync();
+        }
     }
 }

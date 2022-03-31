@@ -30,7 +30,6 @@ namespace Ebay.Presentation.Business_Logic
 
         public async Task<List<AppUserViewDTO>> GetUsers()
         {
-            
             var allUsers = await _userManager.Users.ToListAsync();
 
             List<AppUserViewDTO> appUserViewDTOs = new List<AppUserViewDTO>();

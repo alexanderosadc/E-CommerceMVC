@@ -40,10 +40,14 @@ namespace Ebay.Presentation.Controllers
         }
 
         [Authorize(Roles = "moderator,admin")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int currentPageNumber = 1)
         {
-            IEnumerable<ProductViewDTO> products = await _productBusinessLogic.GetProductsViews();
-            return View(products);
+            /*IEnumerable<ProductViewDTO> products = await _productBusinessLogic
+                .GetProductsViews(currentPageNumber);*/
+            ProductViewListDTO productListDTO = await _productBusinessLogic
+                .GetProductsViews(currentPageNumber);
+            
+            return View(productListDTO);
         }
         [Authorize(Roles = "moderator,admin")]
         public async Task<IActionResult> CreateProduct()

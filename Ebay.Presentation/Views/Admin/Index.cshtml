@@ -1,5 +1,5 @@
 ﻿@using Ebay.Infrastructure.ViewModels.Admin.Index
-@model IEnumerable<ProductViewDTO>
+@model ProductViewListDTO
 
 @{
 }
@@ -23,9 +23,9 @@
          </tr>
      </thead>
      <tbody>
-         @if(Model.Count() > 0)
+         @if(Model.ProductViewsDTO.Count() > 0)
         {
-            @foreach (var item in Model)
+            @foreach (var item in Model.ProductViewsDTO)
             {
                 <tr>
                     <td>@item.Id</td>
@@ -79,3 +79,9 @@
         }
     </tbody>
 </table>
+<div class="btn-group pull-right m-1">
+    @for(int index = 1; index < @Model.PaginationInfo.TotalPages; index++)
+    {
+        <a class="btn btn-primary" value="@index" asp-controller="Admin" asp-action="Index" asp-route-currentPageNumber = "@index">@index</a>
+    }
+</div>

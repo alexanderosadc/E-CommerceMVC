@@ -10,6 +10,6 @@ namespace Ebay.Infrastructure.Interfaces.ProductInterfaces
     public interface IShowProducts
     {
         public Task<ProductViewDTO> GetProductView(int id);
-        public Task<IEnumerable<ProductViewDTO>> GetProductsViews();
+        public Task<ProductViewListDTO> GetProductsViews(int currentPageNumber);
     }
 }

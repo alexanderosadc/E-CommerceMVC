@@ -29,24 +29,113 @@
 
         <div class="form-group">
             <label asp-for="Price"></label>
-            <input type="number" asp-for="Price" class="form-control" value= />
+            <input type="number" asp-for="Price" class="form-control"/>
             <span asp-validation-for="Price" class="text-danger"></span>
         </div>
+
         <div class="form-group">
             <label>Select Categories of Product</label>
             <select multiple class="dropdown-item" asp-for="CategoriesIds" asp-items=@Model.CategoryResponseItems></select>
         </div>
+
         <div>
             <label>Select Discounts</label>
             <select multiple class="dropdown-item" asp-for="DiscountIds" asp-items=@Model.DiscountItems></select>
         </div>
+
         <div>
             <label>Select Product Photos</label>
-            <input asp-for="Files" class="form-control" accept=".jpg,.jpeg,.png"/>
+            <input id="fileInput" asp-for="Files" class="form-control" accept=".jpg,.jpeg,.png" onchange="@Model.Photos"/>
             <span asp-validation-for="Files" class="text-danger"></span>
         </div>
+
+        <div class="row" id="app">
+                @foreach(var photo in @Model.Photos)
+                {
+                      <div class="col-lg-4">
+                        <div class="card">
+                          <img
+                            src="data:image/png;base64,@Convert.ToBase64String(photo.BinaryData)"
+                            class="card-img-top"
+                            alt="Waterfall"
+                          />
+                          <div class="card-body">
+                            <h5 class="card-title">@photo.Name</h5>
+                            @*<p class="card-text">
+                              Some quick example text to build on the card title and make up the bulk
+                              of the card's content.
+                            </p>*@
+                            <a   class="btn btn-danger" 
+                                asp-controller="Admin" 
+                                asp-action="DeletePhoto"
+                                asp-route-itemId = "@photo.Id"
+                                asp-route-modelId = "@Model.Id">
+                                Delete Photo
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                }
+        </div>
+
+        <br />
+        <hr />
         
         <button class="btn btn-primary" type="submit">Save</button>
-
-        
 </form>
+<script>
+
+const fileInput = document.getElementById("fileInput");
+let app = document.querySelector('#app');
+let selectedFiles = [];
+
+fileInput.onchange = displayFiles;
+
+function displayFiles(event){
+    
+    selectedFiles = [...fileInput.files];
+
+    for (var file of selectedFiles){
+        let reader = new FileReader();
+        let fileName = file.name;
+
+        reader.onload = (event) =>{createImageElements(event, fileName)};
+        reader.readAsDataURL(file)
+    }
+}
+
+async function createImageElements (event, fileName) {
+
+	let str = event.target.result;
+    var parentDiv = document.createElement('div');
+    let div = document.createElement('div');
+    let img = document.createElement('img');
+    let deleteButton = document.createElement('input');
+    
+    div.className = "card";
+    img.className = "md-avatar";
+    parentDiv.className = "col-lg-4";
+    deleteButton.className = "btn btn-danger";
+
+    deleteButton.type = "button";
+    deleteButton.value = "Delete Photo";
+    deleteButton.onclick = () => {
+        for(file of selectedFiles)
+        {
+            if(file.name == fileName)
+            {
+                
+            }
+        }
+        parentDiv.remove();
+    }
+
+    div.appendChild(img);
+    parentDiv.appendChild(div);
+    div.appendChild(deleteButton);
+
+	img.src = str;
+	app.append(parentDiv);
+	console.log(str);
+}
+</script>

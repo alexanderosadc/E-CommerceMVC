@@ -322,5 +322,12 @@ namespace Ebay.Presentation.Controllers
                                             .GetEditProductView(int.Parse(modelId));
             return View(nameof(EditProduct), productCreateView);
         }
+
+        [Authorize(Roles = "moderator, admin")]
+        public async Task<IActionResult> UploadPhoto()
+        {
+            await _productBusinessLogic.GetEditProductView(1);
+            return Ok();
+        }
     }
 }

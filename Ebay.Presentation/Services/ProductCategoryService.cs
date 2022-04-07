@@ -1,10 +1,11 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Interfaces.Services;
 
 namespace Ebay.Presentation.Services
 {
-    public class ProductCategoryService
+    public class ProductCategoryService : IProductCategoryService
     {
         private IRepository<ProductCategory> _productCategoryRepository;
         public ProductCategoryService(IRepository<ProductCategory> productCategoryRepository)

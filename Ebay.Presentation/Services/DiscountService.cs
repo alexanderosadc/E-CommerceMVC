@@ -1,12 +1,13 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Interfaces.Services;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Services
 {
-    public class DiscountService
+    public class DiscountService : IDiscountService
     {
         private readonly IRepository<Discount> _discountRepository;
         public DiscountService(IRepository<Discount> discountRepository)
@@ -14,7 +15,7 @@ namespace Ebay.Presentation.Services
             _discountRepository = discountRepository;
         }
 
-        public DiscountViewDTO FromDiscountToDto(Discount discount)
+        /*public DiscountViewDTO FromDiscountToDto(Discount discount)
         {
             return new DiscountViewDTO
             {
@@ -25,13 +26,7 @@ namespace Ebay.Presentation.Services
                 EndDate= discount.EndDate,
                 IsActive= discount.IsActive,
             };
-        }
-
-        public async Task<int> GetNumberOfRecords()
-        {
-            var discounts = await _discountRepository.GetAll();
-            return discounts.AsQueryable().Count();
-        }
+        }*/
 
         /// <summary>
         ///  Method <c>GetSelectedDiscounts</c> gets <c>ProductCreateViewModel</c> and finds 

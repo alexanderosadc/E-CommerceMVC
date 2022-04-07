@@ -11,11 +11,9 @@ namespace Ebay.Presentation.Business_Logic
     public class DiscountBusinessLogic : IDiscountBL
     {
         private readonly IRepository<Discount> _discountRepository;
-        private readonly DiscountService _discountService;
         public DiscountBusinessLogic(IRepository<Discount> discountRepository)
         {
             _discountRepository = discountRepository;
-            _discountService = new DiscountService(_discountRepository);
         }
 
         public async Task<IEnumerable<DiscountViewDTO>> GetDiscountsDTO()
@@ -27,7 +25,8 @@ namespace Ebay.Presentation.Business_Logic
         public async Task<DiscountViewDTO> GetDiscountDTO()
         {
             DiscountViewDTO discountViewModel = new DiscountViewDTO();
-            discountViewModel.Id = await _discountService.GetNumberOfRecords() + 1;
+            var lastItem = await _discountRepository.GetLastItem();
+            discountViewModel.Id = lastItem.Id + 1;
             return discountViewModel;
         }
 
@@ -40,7 +39,7 @@ namespace Ebay.Presentation.Business_Logic
         public async Task<DiscountViewDTO> EditDiscount(int itemId)
         {
             var discount = await _discountRepository.Get(itemId);
-            return _discountService.FromDiscountToDto(discount);
+            return DTOMapper.FromDiscountToDto(discount);
         }
 
         public async Task UpdateDiscount(DiscountViewDTO discountViewModel)

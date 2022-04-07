@@ -1,10 +1,12 @@
 using Ebay.Domain.Entities;
 using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.Interfaces;
+using Ebay.Infrastructure.Interfaces.Services;
 using Ebay.Infrastructure.Persistance;
 using Ebay.Infrastructure.Repository;
 using Ebay.Presentation.Business_Logic;
 using Ebay.Presentation.Seeders;
+using Ebay.Presentation.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +31,11 @@ builder.Services.AddScoped(typeof(ICategoryBL), typeof(CategoryBusinessLogic));
 builder.Services.AddScoped(typeof(IDiscountBL), typeof(DiscountBusinessLogic));
 builder.Services.AddScoped(typeof(IUserBL), typeof(UserBusinessLogic));
 builder.Services.AddScoped(typeof(IValidationBL), typeof(ValidationBusinessLogic));
+builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
+builder.Services.AddScoped(typeof(IDiscountService), typeof(DiscountService));
+builder.Services.AddScoped(typeof(IProductCategoryService), typeof(ProductCategoryService));
+builder.Services.AddScoped(typeof(IProductDiscountService), typeof(ProductDiscountService));
+//builder.Services
 
 builder.Services.ConfigureApplicationCookie(config =>
 {

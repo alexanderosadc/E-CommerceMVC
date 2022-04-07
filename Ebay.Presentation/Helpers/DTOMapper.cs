@@ -161,6 +161,19 @@ namespace Ebay.Presentation.Helpers
             return categoryCreateView;
         }
 
+        public static DiscountViewDTO FromDiscountToDto(Discount discount)
+        {
+            return new DiscountViewDTO
+            {
+                Id = discount.Id,
+                Name = discount.Name,
+                DiscountPercent = discount.DiscountPercent,
+                StartDate = discount.StartDate,
+                EndDate = discount.EndDate,
+                IsActive = discount.IsActive,
+            };
+        }
+
         public static Category ToCategory(CategoryCreateDTO dto, List<Category> childCategories, bool isNew)
         {
             if(dto == null)

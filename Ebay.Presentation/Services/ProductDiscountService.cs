@@ -1,10 +1,11 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Interfaces.Services;
 
 namespace Ebay.Presentation.Services
 {
-    public class ProductDiscountService
+    public class ProductDiscountService : IProductDiscountService
     {
         public readonly IRepository<ProductDiscount> _productDiscountRepository;
         public ProductDiscountService(IRepository<ProductDiscount> productRepository)

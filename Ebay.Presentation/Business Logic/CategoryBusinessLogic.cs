@@ -13,11 +13,9 @@ namespace Ebay.Presentation.Business_Logic
     public class CategoryBusinessLogic : ICategoryBL
     {
         private readonly IRepository<Category> _categoryRepository;
-        private readonly CategoryService _categoryService;
         public CategoryBusinessLogic(IRepository<Category> categoryRepository)
         {
             _categoryRepository = categoryRepository;
-            _categoryService = new CategoryService(categoryRepository);
         }
 
         public async Task<IEnumerable<CategoryViewDTO>> GetCategoyDTO()

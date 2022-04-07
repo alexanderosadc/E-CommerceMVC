@@ -1,13 +1,14 @@
 ﻿using Ebay.Domain.Entities;
 using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
+using Ebay.Infrastructure.Interfaces.Services;
 using Ebay.Infrastructure.ViewModels.Admin.CreateCategory;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ebay.Presentation.Services
 {
-    public class CategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly IRepository<Category> _categoryRepository;
 
@@ -33,12 +34,6 @@ namespace Ebay.Presentation.Services
                 .Select(task => task.Result)
                 .Where(category => category != null)
                 .ToList();
-        }
-
-        public async Task<int> GetNumberOfRecords()
-        {
-            var categories = await _categoryRepository.GetAll();
-            return categories.AsQueryable().Count();
         }
     }
 }

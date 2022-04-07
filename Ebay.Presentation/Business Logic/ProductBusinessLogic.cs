@@ -2,6 +2,7 @@
 using Ebay.Domain.Entities.JoinTables;
 using Ebay.Domain.Interfaces;
 using Ebay.Infrastructure.Interfaces;
+using Ebay.Infrastructure.Interfaces.Services;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Presentation.Helpers;
@@ -28,21 +29,20 @@ namespace Ebay.Presentation.Business_Logic
 
 
         // Services declaration
-        private readonly ProductService _productService;
-        private readonly DiscountService _discountService;
-        private readonly CategoryService _categoryService;
+        private readonly IDiscountService _discountService;
+        private readonly ICategoryService _categoryService;
 
         private readonly ProductCategoryService _productCategoryService;
         private readonly ProductDiscountService _productDiscountService;
         public ProductBusinessLogic(
             IRepository<Product> productRepository,
-            IRepository<CartItem> cartItemRepository,
             IRepository<Category> categoryRepository,
             IRepository<Photo> photoRepository,
             IRepository<Discount> discountRepository,
-            IRepository<Cart> cartRepository,
             IRepository<ProductCategory> productCategory,
-            IRepository<ProductDiscount> productDiscount
+            IRepository<ProductDiscount> productDiscount,
+            ICategoryService categoryService,
+            IDiscountService discountService
         )
         {
             _productRepository = productRepository;
@@ -60,9 +60,8 @@ namespace Ebay.Presentation.Business_Logic
 
 
             // Create interface for each Service
-            _productService = new ProductService(_productRepository);
-            _discountService = new DiscountService(_discountRepository);
-            _categoryService = new CategoryService(_categoryRepository);
+            _discountService = discountService;
+            _categoryService = categoryService;
             _productCategoryService = new ProductCategoryService(_productCategoryRepository);
             _productDiscountService = new ProductDiscountService(_productDiscountRepository);
         }
@@ -82,7 +81,7 @@ namespace Ebay.Presentation.Business_Logic
                 .Where(item => item.IsActive == true)
                 .Sum(item => item.DiscountPercent);
 
-            productView.FinalPrice = _productService.GetFinalPrice(product.Price, discountSum);
+            productView.FinalPrice = PriceCalulatorHelper.GetFinalPrice(product.Price, discountSum);
 
             return productView;
         }
@@ -100,7 +99,7 @@ namespace Ebay.Presentation.Business_Logic
 
             var productsViews = products.Select(item => DTOMapper.ToProductViewDTO(item)).ToList();
             productsViews.ForEach(item => item.FinalPrice =
-                _productService.GetFinalPrice(
+                PriceCalulatorHelper.GetFinalPrice(
                     item.Price,
                     item.DiscountViews.Where(item => item.IsActive == true).Sum(item => item.DiscountPercent)
                     )
@@ -131,7 +130,8 @@ namespace Ebay.Presentation.Business_Logic
             var productCategories = await _categoryRepository.GetAll();
             var productDiscounts = await _discountRepository.GetAll();
 
-            productCreateViewModel.Id = await _productService.GetNumberOfRecords() + 1;
+            var lastInsertedProduct = await _productRepository.GetLastItem();
+            productCreateViewModel.Id = lastInsertedProduct.Id + 1;
             productCreateViewModel.CategoryResponseItems = await DropdownHelper.CreateDropdownCategory(productCategories);
             productCreateViewModel.DiscountItems = await DropdownHelper.CreateDropdownDiscounts(productDiscounts);
 
@@ -159,21 +159,25 @@ namespace Ebay.Presentation.Business_Logic
         /// </returns>
         public async Task<ProductCreateDTO> GetEditProductView(int itemId)
         {
-            var productCreateView = await _productService.GetProductCreateViewModelById(itemId);
+            //var productCreateView = await _productService.GetProductCreateViewModelById(itemId);
+            var product = await _productRepository.Get(itemId);
+            var productCreateView = DTOMapper.ToProductCreateDTO(product);
             var productCategories = await _categoryRepository.GetAll();
             var productDiscounts = await _discountRepository.GetAll();
 
             productCreateView.CategoryResponseItems = await DropdownHelper.CreateDropdownCategory(productCategories);
             productCreateView.DiscountItems = await DropdownHelper.CreateDropdownDiscounts(productDiscounts);
 
-            var selectedCategoriesId = await _productService.GetSelectedCategoriesId(itemId);
+            var selectedCategoriesId = product.ProductCategories.Select(item => item.CategoryId).ToList();
+            //var selectedCategoriesId = await _productService.GetSelectedCategoriesId(itemId);
             productCreateView.CategoryResponseItems
                 .ForEach(item => 
                 {
                     item.Selected = selectedCategoriesId.Contains(int.Parse(item.Value));
                 });
 
-            var selectedDiscountsId = await _productService.GetSelectedDiscountId(itemId);
+            var selectedDiscountsId = product.ProductDiscounts.Select(item => item.DiscountId).ToList();
+            //var selectedDiscountsId = await _productService.GetSelectedDiscountId(itemId);
             productCreateView.DiscountItems
                 .ForEach(item => 
                 {
@@ -236,6 +240,7 @@ namespace Ebay.Presentation.Business_Logic
 
             return product;
         }
+
 
         public async Task DeletePhoto(string id)
         {

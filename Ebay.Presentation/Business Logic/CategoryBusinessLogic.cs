@@ -46,7 +46,8 @@ namespace Ebay.Presentation.Business_Logic
         public async Task<CategoryCreateDTO> GetCategoryCreateDTO()
         {
             CategoryCreateDTO categoryCreateViewModel = new CategoryCreateDTO();
-            categoryCreateViewModel.Id = await _categoryService.GetNumberOfRecords() + 1;
+            var lastEntity = await _categoryRepository.GetLastItem();
+            categoryCreateViewModel.Id = lastEntity.Id + 1;
             var productCategories = await _categoryRepository.GetAll();
             categoryCreateViewModel.AllChildrenCategories = await DropdownHelper.CreateDropdownCategory(productCategories);
 
@@ -57,7 +58,7 @@ namespace Ebay.Presentation.Business_Logic
         public async Task CreateNewCategory(CategoryCreateDTO categoryViewModel)
         {
             List<Category> childCategories = await GetChildCategories(categoryViewModel);
-            Category category = DTOMapper.ToCategory(categoryViewModel, childCategories);
+            Category category = DTOMapper.ToCategory(categoryViewModel, childCategories, isNew: true);
             await _categoryRepository.Insert(category);
         }
 
@@ -76,7 +77,7 @@ namespace Ebay.Presentation.Business_Logic
         {
             List<Category> childCategories = await GetChildCategories(categoryCreateViewModel);
            
-            var category = DTOMapper.ToCategory(categoryCreateViewModel, childCategories);
+            var category = DTOMapper.ToCategory(categoryCreateViewModel, childCategories, isNew: false);
             await _categoryRepository.Update(category);
         }
 

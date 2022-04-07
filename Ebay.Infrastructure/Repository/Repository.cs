@@ -54,5 +54,10 @@ namespace Ebay.Infrastructure.Repository
         {
             return await _entities.CountAsync();
         }
+
+        public async Task<T> GetLastItem()
+        {
+            return await _entities.OrderBy(item => item.Id).LastAsync();
+        }
     }
 }

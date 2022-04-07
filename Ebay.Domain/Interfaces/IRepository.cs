@@ -13,6 +13,7 @@ namespace Ebay.Domain.Interfaces
         public Task<IEnumerable<T>> GetAll();
         public IEnumerable<T> GetFirstValues(int pageIndex, int pageSize);
         public Task<int> GetNumberOfItems();
+        public Task<T> GetLastItem();
         public Task<T> Get(int id);
         public Task Insert(T entity);
         public Task Update(T entity);

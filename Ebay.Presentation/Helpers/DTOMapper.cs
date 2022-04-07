@@ -161,14 +161,14 @@ namespace Ebay.Presentation.Helpers
             return categoryCreateView;
         }
 
-        public static Category ToCategory(CategoryCreateDTO dto, List<Category> childCategories)
+        public static Category ToCategory(CategoryCreateDTO dto, List<Category> childCategories, bool isNew)
         {
             if(dto == null)
                 throw new ArgumentNullException(nameof(dto));
 
             return new Category
             {
-                Id = dto.Id,
+                Id = (isNew == true) ? 0 : dto.Id,
                 Name = dto.Name,
                 Description = dto.Description,
                 Categories = childCategories

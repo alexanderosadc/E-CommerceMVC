@@ -36,10 +36,6 @@ namespace Ebay.Presentation.Services
                     ProductId = product.Id,
                     Product = product
                 });
-            /*foreach (var item in productCategories)
-            {
-                _productCategoryRepository.Insert(item);
-            }*/
             return productCategories.ToList();
         }
 

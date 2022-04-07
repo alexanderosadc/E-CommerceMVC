@@ -21,9 +21,9 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
         public bool IsActive { get; set; }
 
         [DateStart]
-        public DateTime StartDate { get; set; }  = DateTime.Now.Date;
+        public DateTime StartDate { get; set; }  = DateTime.Now.Date.AddHours(DateTime.Now.Hour) + TimeSpan.FromHours(1);
 
         [DateEnd(DateStartPropertyName = "StartDate")]
-        public DateTime EndDate { get; set; } = DateTime.Now.Date;
+        public DateTime EndDate { get; set; } = DateTime.Now.Date.AddHours(DateTime.Now.Hour) + TimeSpan.FromHours(2);
     }
 }

@@ -15,19 +15,6 @@ namespace Ebay.Presentation.Services
             _discountRepository = discountRepository;
         }
 
-        /*public DiscountViewDTO FromDiscountToDto(Discount discount)
-        {
-            return new DiscountViewDTO
-            {
-                Id = discount.Id,
-                Name= discount.Name,
-                DiscountPercent = discount.DiscountPercent,
-                StartDate = discount.StartDate,
-                EndDate= discount.EndDate,
-                IsActive= discount.IsActive,
-            };
-        }*/
-
         /// <summary>
         ///  Method <c>GetSelectedDiscounts</c> gets <c>ProductCreateViewModel</c> and finds 
         ///  all <c>Discounts</c> related to this product.

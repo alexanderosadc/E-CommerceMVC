@@ -65,13 +65,17 @@ namespace Ebay.Presentation.Business_Logic
         {
             var category = await _categoryRepository.Get(itemId);
             var productCategories = await _categoryRepository.GetAll();
-            var categoryCreateModel = await DTOMapper.ToCategoryCreateDTO(category, productCategories);
+            var productCategoriesWithoutCurrent = productCategories
+                .Where(item => item.Id != category.Id)
+                .ToList();
+            var categoryCreateModel = await DTOMapper.ToCategoryCreateDTO(category, productCategoriesWithoutCurrent);
             return categoryCreateModel;
         }
 
         public async Task UpdateCategory(CategoryCreateDTO categoryCreateViewModel)
         {
             List<Category> childCategories = await GetChildCategories(categoryCreateViewModel);
+           
             var category = DTOMapper.ToCategory(categoryCreateViewModel, childCategories);
             await _categoryRepository.Update(category);
         }

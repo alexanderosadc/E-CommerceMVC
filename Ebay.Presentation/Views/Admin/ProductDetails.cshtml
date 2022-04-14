@@ -33,7 +33,7 @@
         <tr>
             <th>Discounts Applied</th>
             <td>
-                @foreach(var discount in @Model.DiscountViews)
+                @foreach(var discount in @Model.Discounts)
                 { 
                     <span>@discount.Name = @discount.DiscountPercent %,</span>
                     <br />

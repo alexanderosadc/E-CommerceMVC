@@ -4,11 +4,11 @@ using Ebay.Domain.Entities;
 using Ebay.Infrastructure.ViewModels.Admin.CreateProduct;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Ebay.Domain.Entities.JoinTables;
-using Ebay.Presentation.Business_Logic;
+using Ebay.Infrastructure.Business_Logic;
 using Microsoft.AspNetCore.Authorization;
 using Ebay.Infrastructure.ViewModels.Admin;
 using Ebay.Infrastructure.ViewModels.Admin.CreateCategory;
-using Ebay.Infrastructure.Interfaces;
+using Ebay.Infrastructure.Interfaces.AdminPresentation;
 using Microsoft.AspNetCore.Identity;
 using Ebay.Infrastructure.ViewModels.Admin.Users;
 

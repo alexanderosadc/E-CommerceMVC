@@ -1,4 +1,5 @@
 ﻿using Ebay.Infrastructure.Interfaces;
+using Ebay.Infrastructure.Interfaces.AdminPresentation;
 using Ebay.Infrastructure.ViewModels.Admin.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -23,9 +23,9 @@
          </tr>
      </thead>
      <tbody>
-         @if(Model.ProductViewsDTO.Count() > 0)
+         @if(Model.Products.Count() > 0)
         {
-            @foreach (var item in Model.ProductViewsDTO)
+            @foreach (var item in Model.Products)
             {
                 <tr>
                     <td>@item.Id</td>
@@ -33,7 +33,7 @@
                     <td>@item.TotalQuantity</td>
                     <td>@item.Price.ToString("c")</td>
                     <td>
-                        @foreach(var discount in item.DiscountViews)
+                        @foreach(var discount in item.Discounts)
                         { 
                             <span>@discount.Name = @discount.DiscountPercent %,</span>
                             <br />

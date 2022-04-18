@@ -132,7 +132,16 @@ namespace Ebay.Infrastructure.Business_Logic
             var productDiscounts = await _discountRepository.GetAll();
 
             var lastInsertedProduct = await _productRepository.GetLastItem();
-            productCreateViewModel.Id = lastInsertedProduct.Id + 1;
+            
+            if(lastInsertedProduct != null)
+            {
+                productCreateViewModel.Id = lastInsertedProduct.Id + 1;
+            }
+            else
+            {
+                productCreateViewModel.Id = 1;
+            }
+            
             productCreateViewModel.CategoryResponseItems = await DropdownHelper.CreateDropdownCategory(productCategories);
             productCreateViewModel.DiscountItems = await DropdownHelper.CreateDropdownDiscounts(productDiscounts);
 

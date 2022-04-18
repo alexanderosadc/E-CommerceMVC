@@ -39,6 +39,7 @@ namespace Ebay.WebAPI.Controllers
             ProductViewListDTO productListDTO = await _productBusinessLogic
                 .GetProductsViews(currentPageNumber);
 
+
             if (productListDTO == null)
                 return NotFound();
 
@@ -57,6 +58,22 @@ namespace Ebay.WebAPI.Controllers
                 return NotFound();
 
             return Ok(productView);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostGet([FromQuery] int currentPageNumber = 1)
+        {
+            if (currentPageNumber < 1)
+                return BadRequest();
+
+            ProductViewListDTO productListDTO = await _productBusinessLogic
+                .GetProductsViews(currentPageNumber);
+
+
+            if (productListDTO == null)
+                return NotFound();
+
+            return Ok(productListDTO);
         }
     }
 }

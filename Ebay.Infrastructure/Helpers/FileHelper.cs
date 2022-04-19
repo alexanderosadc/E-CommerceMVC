@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.IO.Compression;
 
 namespace Ebay.Infrastructure.Helpers
 {
@@ -21,6 +22,22 @@ namespace Ebay.Infrastructure.Helpers
             }
 
             return fileBytes;
+        }
+
+        public static byte[] Compress(byte[] buffer)
+        {
+            byte[] compressedByte;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (DeflateStream ds = new DeflateStream(ms, CompressionMode.Compress))
+                {
+                    ds.Write(buffer, 0, buffer.Length);
+                }
+
+                compressedByte = ms.ToArray();
+            }
+
+            return compressedByte;
         }
     }
 }

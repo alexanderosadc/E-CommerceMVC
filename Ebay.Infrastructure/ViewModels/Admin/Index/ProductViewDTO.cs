@@ -16,6 +16,6 @@ namespace Ebay.Infrastructure.ViewModels.Admin.Index
 
         public IEnumerable<DiscountViewDTO>? Discounts { get; set; }
         
-        public IEnumerable<PhotoDTO> Photos;
+        public List<PhotoDTO> Photos;
     }
 }

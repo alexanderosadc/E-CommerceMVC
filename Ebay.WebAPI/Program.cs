@@ -16,7 +16,11 @@ builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>().
     AddDefaultTokenProviders();
 
-
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(x =>
+    {
+        x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
 
 DependencyInjectionWebAPI.AssignDependencies(builder);
 

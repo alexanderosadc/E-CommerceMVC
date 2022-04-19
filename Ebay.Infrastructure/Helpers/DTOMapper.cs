@@ -85,7 +85,7 @@ namespace Ebay.Infrastructure.Helpers
                 CategoryNames = product.ProductCategories.Select(productCat => productCat.Category.Name).ToList(),
                 Discounts = product.ProductDiscounts
                     .Select(productDisc => ToDiscountViewDTO(productDisc.Discount)),
-                Photos =  product.Photos.Select(item => ToPhotoDTO(item)),          
+                Photos =  product.Photos.Select(item => ToPhotoDTO(item)).ToList(),          
             };
         }
 

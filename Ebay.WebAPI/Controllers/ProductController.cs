@@ -1,4 +1,5 @@
-﻿using Ebay.Infrastructure.Interfaces.AdminPresentation;
+﻿using Ebay.Infrastructure.Helpers;
+using Ebay.Infrastructure.Interfaces.AdminPresentation;
 using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +40,7 @@ namespace Ebay.WebAPI.Controllers
             ProductViewListDTO productListDTO = await _productBusinessLogic
                 .GetProductsViews(currentPageNumber);
 
-
+            //productListDTO.Products.Select(item => item.Photos).ToList().ForEach() .Photos.ForEach(item => item.BinaryData = FileHelper.Compress(item.BinaryData));
             if (productListDTO == null)
                 return NotFound();
 
@@ -53,9 +54,10 @@ namespace Ebay.WebAPI.Controllers
                 return BadRequest();
 
             var productView = await _productBusinessLogic.GetProductView(id);
-            
+
+           // productView.Photos.ForEach(item => item.BinaryData = FileHelper.Compress(item.BinaryData));
             if (productView == null)
-                return NotFound();
+                return NotFound(productView);
 
             return Ok(productView);
         }

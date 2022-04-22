@@ -19,16 +19,25 @@ namespace Ebay.Infrastructure.Business_Logic
 
         public async Task<IEnumerable<DiscountViewDTO>> GetDiscountsDTO()
         {
-            var categories = await _discountRepository.GetAll();
-            var categoryViews = categories.Select(item => DTOMapper.ToDiscountViewDTO(item));
-            return categoryViews;
+            var discount = await _discountRepository.GetAll();
+            var discountView = discount.Select(item => DTOMapper.ToDiscountViewDTO(item));
+            return discountView;
         }
         public async Task<DiscountViewDTO> GetDiscountDTO()
         {
             DiscountViewDTO discountViewModel = new DiscountViewDTO();
             var lastItem = await _discountRepository.GetLastItem();
             discountViewModel.Id = lastItem.Id + 1;
+
             return discountViewModel;
+        }
+
+        public async Task<DiscountViewDTO> GetDiscountDTO(int id)
+        {
+            var discount = await _discountRepository.Get(id);
+            var discountView = DTOMapper.ToDiscountViewDTO(discount);
+
+            return discountView;
         }
 
         public async Task CreateNewDiscount(DiscountViewDTO discountViewModel)

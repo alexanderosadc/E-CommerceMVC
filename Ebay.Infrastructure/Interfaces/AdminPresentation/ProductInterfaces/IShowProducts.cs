@@ -1,4 +1,5 @@
-﻿using Ebay.Infrastructure.ViewModels.Admin.Index;
+﻿using Ebay.Domain.Entities;
+using Ebay.Infrastructure.ViewModels.Admin.Index;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,13 @@ namespace Ebay.Infrastructure.Interfaces.AdminPresentation.ProductInterfaces
     {
         public Task<ProductViewDTO> GetProductView(int id);
         public Task<ProductViewListDTO> GetProductsViews(int currentPageNumber, int pageSize = 2);
+        public Task<ProductViewListDTO> GetProductsViewsByCategoryDiscounts(int currentPageNumber, int? categoryId,
+            int? discountId,
+            int pageSize = 2);
+
+        public List<Product> GetProductsByCategoryId(int categoryId, List<Product> products);
+        public List<Product> GetProductsByDiscountId(int discountId, List<Product> products);
+        public List<Product> GetCombinedListOfProducts(int? categoryId, int? discountId, List<Product> products);
+        public List<ProductViewDTO> GetProductsWithFinalPrice(List<Product> products);
     }
 }

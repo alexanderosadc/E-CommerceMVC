@@ -1,12 +1,12 @@
 ﻿using Ebay.Infrastructure.Interfaces.AdminPresentation;
-using Ebay.Infrastructure.ViewModels.Admin;
+using Ebay.Infrastructure.ViewModels.Admin.Index;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ebay.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : Controller
+    public class DiscountsController : Controller
     {
         // Business Logic 
         private readonly IProductBL _productBusinessLogic;
@@ -16,7 +16,7 @@ namespace Ebay.WebAPI.Controllers
         private readonly IValidationBL _validationBusinessLogic;
 
         // Services declaration
-        public CategoriesController(
+        public DiscountsController(
             IProductBL productBusinessLogic,
             ICategoryBL categoryBusinessLogic,
             IDiscountBL discountBusinessLogic,
@@ -34,13 +34,13 @@ namespace Ebay.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            IEnumerable<CategoryViewDTO> categories = await _categoryBusinessLogic.GetCategoyDTO();
-            if(categories == null)
+            IEnumerable<DiscountViewDTO> discounts = await _discountBusinessLogic.GetDiscountsDTO();
+            if (discounts == null)
             {
                 return NotFound();
             }
 
-            return Ok(categories);
+            return Ok(discounts);
         }
 
         [HttpGet("{id}")]
@@ -49,11 +49,11 @@ namespace Ebay.WebAPI.Controllers
             if (id < 1)
                 return BadRequest();
 
-            var categoryView = await _categoryBusinessLogic.GetCategoryDTO(id);
-            if (categoryView == null)
+            var discount = await _discountBusinessLogic.GetDiscountDTO(id);
+            if(discount == null)
                 return NotFound();
 
-            return Ok(categoryView);
+            return Ok(discount);
         }
     }
 }

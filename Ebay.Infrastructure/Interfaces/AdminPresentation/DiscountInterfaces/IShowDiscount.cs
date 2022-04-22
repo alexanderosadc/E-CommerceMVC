@@ -11,6 +11,7 @@ namespace Ebay.Infrastructure.Interfaces.AdminPresentation.DiscountInterfaces
     public interface IShowDiscount
     {
         public Task<DiscountViewDTO> GetDiscountDTO();
+        public Task<DiscountViewDTO> GetDiscountDTO(int id);
         public Task<IEnumerable<DiscountViewDTO>> GetDiscountsDTO();
         public Task<List<SelectListItem>> GetDropdownDiscounts();
     }

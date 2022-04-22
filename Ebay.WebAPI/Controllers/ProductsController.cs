@@ -22,13 +22,28 @@ namespace Ebay.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int pageSize = 4, [FromQuery] int currentPageNumber = 1)
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int? categoryId,
+            [FromQuery] int? discountId,
+            [FromQuery] int pageSize = 4, 
+            [FromQuery] int currentPageNumber = 1)
         {
+
             if (currentPageNumber < 1)
                 return BadRequest();
 
-            ProductViewListDTO productListDTO = await _productBusinessLogic
+            ProductViewListDTO productListDTO = null;
+
+            if (categoryId != null || discountId != null)
+            {
+                productListDTO = await _productBusinessLogic
+                .GetProductsViewsByCategoryDiscounts(currentPageNumber, categoryId, discountId, pageSize);
+            }
+            else if(categoryId == null && discountId == null)
+            {
+                productListDTO = await _productBusinessLogic
                 .GetProductsViews(currentPageNumber, pageSize);
+            }
 
             //productListDTO.Products.Select(item => item.Photos).ToList().ForEach() .Photos.ForEach(item => item.BinaryData = FileHelper.Compress(item.BinaryData));
             if (productListDTO == null)

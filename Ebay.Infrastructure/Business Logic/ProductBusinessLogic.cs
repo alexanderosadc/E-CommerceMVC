@@ -118,7 +118,98 @@ namespace Ebay.Infrastructure.Business_Logic
             };
         }
 
-        
+        public async Task<ProductViewListDTO> GetProductsViewsByCategoryDiscounts(
+            int currentPageNumber,
+            int? categoryId,
+            int? discountId,
+            int pageSize = PageSize
+            )
+        {
+            
+            var products = await _productRepository.GetAll();
+            var productsCombined = GetCombinedListOfProducts(categoryId, discountId, products.ToList());
+            // Products which exist in the list for 2 times are considered items which are both in discount and category
+            if (productsCombined.Count > 0)
+            {
+                var productsViews = GetProductsWithFinalPrice(productsCombined);
+
+                return new ProductViewListDTO
+                {
+                    Products = productsViews,
+                    PaginationInfo = new PagingInfo
+                    {
+                        TotalItems = productsViews.Count(),
+                        ItemsPerPage = PageSize,
+                        CurrentPage = currentPageNumber,
+                    }
+                };
+            }
+
+            return null;  
+        }
+
+        public List<Product> GetProductsByCategoryId(int categoryId, List<Product> products)
+        {
+            return products.Where(item =>
+            {
+                var ids = item.ProductCategories.Select(category => category.Id);
+                if (ids.Contains(categoryId))
+                    return true;
+                return false;
+            }).ToList();
+        }
+
+        public List<Product> GetProductsByDiscountId(int discountId, List<Product> products)
+        {
+            return products.Where(item =>
+            {
+                var ids = item.ProductDiscounts.Select(discount => discount.Id);
+                if (ids.Contains(discountId))
+                    return true;
+                return false;
+            }).ToList();
+        }
+
+        public List<Product> GetCombinedListOfProducts(int? categoryId, int? discountId, List<Product> products)
+        {
+            List<Product> productsCombined = new List<Product>();
+
+            if (categoryId != null)
+            {
+                var productsWithCategoryId = GetProductsByCategoryId(categoryId.Value, products.ToList());
+                productsCombined.AddRange(productsWithCategoryId);
+            }
+
+            if (discountId != null)
+            {
+                var productsWithDiscountId = GetProductsByDiscountId(discountId.Value, products.ToList());
+                productsCombined.AddRange(productsWithDiscountId);
+
+                if (categoryId != null)
+                {
+                    productsCombined = productsCombined
+                    .GroupBy(item => item)
+                    .Where(product => product.Count() > 1)
+                    .Select(y => y.Key)
+                    .ToList();
+                }
+            }
+
+            return productsCombined;
+        }
+
+        public List<ProductViewDTO> GetProductsWithFinalPrice(List<Product> products)
+        {
+            var productsViews = products.Select(item => DTOMapper.ToProductViewDTO(item)).ToList();
+            productsViews.ForEach(item => item.FinalPrice =
+                PriceCalulatorHelper.GetFinalPrice(
+                    item.Price,
+                    item.Discounts.Where(item => item.IsActive == true).Sum(item => item.DiscountPercent)
+                    )
+                );
+            return productsViews;
+        }
+
         /// <summary>
         ///  Method <c>GetCreateProductView</c> gets the <c>ProductCreateViewModel</c> for the visualization in UI.
         /// </summary>

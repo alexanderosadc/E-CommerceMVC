@@ -26,6 +26,14 @@ namespace Ebay.Infrastructure.Business_Logic
             return categoryViews;
         }
 
+        public async Task<CategoryViewDTO> GetCategoryDTO(int id)
+        {
+            var category = await _categoryRepository.Get(id);
+            var categoryView = CreateCategoryView(category);
+
+            return categoryView;
+        }
+
         public CategoryViewDTO CreateCategoryView(Category category)
         {
             var categoryViewModel = new CategoryViewDTO
@@ -61,7 +69,7 @@ namespace Ebay.Infrastructure.Business_Logic
             await _categoryRepository.Insert(category);
         }
 
-        public async Task<CategoryCreateDTO> EditCategory(int itemId)
+        public async Task<CategoryCreateDTO> GetCategoryEditDTO(int itemId)
         {
             var category = await _categoryRepository.Get(itemId);
             var productCategories = await _categoryRepository.GetAll();

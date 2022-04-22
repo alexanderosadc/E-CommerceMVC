@@ -12,6 +12,7 @@ namespace Ebay.Infrastructure.Interfaces.AdminPresentation.CategoryInterfaces
     public interface IShowCategory
     {
         public Task<IEnumerable<CategoryViewDTO>> GetCategoyDTO();
+        public Task<CategoryViewDTO> GetCategoryDTO(int id);
         public Task<List<SelectListItem>> GetDropdownCategories();
     }
 }

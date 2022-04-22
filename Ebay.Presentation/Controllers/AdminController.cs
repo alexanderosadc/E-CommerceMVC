@@ -166,7 +166,7 @@ namespace Ebay.Presentation.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditCategory(int itemId)
         {
-            var categoryCreateViewModel = await _categoryBusinessLogic.EditCategory(itemId);
+            var categoryCreateViewModel = await _categoryBusinessLogic.GetCategoryEditDTO(itemId);
 
             return View(categoryCreateViewModel);
         }

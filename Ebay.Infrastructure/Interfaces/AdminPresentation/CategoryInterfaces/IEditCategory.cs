@@ -9,7 +9,7 @@ namespace Ebay.Infrastructure.Interfaces.AdminPresentation.CategoryInterfaces
 {
     public interface IEditCategory
     {
-        public Task<CategoryCreateDTO> EditCategory(int itemId);
+        public Task<CategoryCreateDTO> GetCategoryEditDTO(int itemId);
         public Task UpdateCategory(CategoryCreateDTO categoryCreateViewModel);
     }
 }

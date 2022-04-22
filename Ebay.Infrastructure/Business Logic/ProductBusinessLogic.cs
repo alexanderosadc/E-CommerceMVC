@@ -92,9 +92,9 @@ namespace Ebay.Infrastructure.Business_Logic
         /// <returns>
         ///     List of all products in the DB.
         /// </returns>
-        public async Task<ProductViewListDTO> GetProductsViews(int currentPageNumber)
+        public async Task<ProductViewListDTO> GetProductsViews(int currentPageNumber, int pageSize = PageSize)
         {
-            var products =  _productRepository.GetFirstValues(currentPageNumber, PageSize);
+            var products =  _productRepository.GetFirstValues(currentPageNumber, pageSize);
 
             //var productsViews = _productService.GetProductViewModels(products).ToList();
 

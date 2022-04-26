@@ -45,7 +45,7 @@ namespace Ebay.Presentation.Controllers
             /*IEnumerable<ProductViewDTO> products = await _productBusinessLogic
                 .GetProductsViews(currentPageNumber);*/
             ProductViewListDTO productListDTO = await _productBusinessLogic
-                .GetProductsViews(currentPageNumber);
+                .GetProductsViews(currentPageNumber, 10);
             
             return View(productListDTO);
         }

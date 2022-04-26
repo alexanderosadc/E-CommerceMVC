@@ -80,7 +80,7 @@
     </tbody>
 </table>
 <div class="btn-group pull-right m-1">
-    @for(int index = 1; index < @Model.PaginationInfo.TotalPages; index++)
+    @for(int index = 1; index <= @Model.PaginationInfo.TotalPages + 1; index++)
     {
         <a class="btn btn-primary" value="@index" asp-controller="Admin" asp-action="Index" asp-route-currentPageNumber = "@index">@index</a>
     }

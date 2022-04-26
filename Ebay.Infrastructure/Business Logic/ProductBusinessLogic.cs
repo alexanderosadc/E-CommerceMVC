@@ -16,7 +16,7 @@ namespace Ebay.Infrastructure.Business_Logic
     public class ProductBusinessLogic : IProductBL
     {
         // Constants
-        private const int PageSize = 4;
+        private const int PageSize = 10;
 
         // Repositories 
         private readonly IRepository<Product> _productRepository;
@@ -92,7 +92,7 @@ namespace Ebay.Infrastructure.Business_Logic
         /// <returns>
         ///     List of all products in the DB.
         /// </returns>
-        public async Task<ProductViewListDTO> GetProductsViews(int currentPageNumber, int pageSize = PageSize)
+        public async Task<ProductViewListDTO> GetProductsViews(int currentPageNumber, int pageSize = 10)
         {
             var products =  _productRepository.GetFirstValues(currentPageNumber, pageSize);
 
@@ -112,7 +112,7 @@ namespace Ebay.Infrastructure.Business_Logic
                 PaginationInfo = new PagingInfo
                 {
                     TotalItems = await _productRepository.GetNumberOfItems(),
-                    ItemsPerPage = PageSize,
+                    ItemsPerPage = pageSize,
                     CurrentPage = currentPageNumber,
                 }
             };
@@ -139,7 +139,7 @@ namespace Ebay.Infrastructure.Business_Logic
                     PaginationInfo = new PagingInfo
                     {
                         TotalItems = productsViews.Count(),
-                        ItemsPerPage = PageSize,
+                        ItemsPerPage = pageSize,
                         CurrentPage = currentPageNumber,
                     }
                 };
@@ -349,6 +349,30 @@ namespace Ebay.Infrastructure.Business_Logic
             if (photo == null)
                 throw new ArgumentException("Product with this id does not exist");
             await _photoRepository.Delete(photo);
+        }
+
+
+        public IEnumerable<ProductViewDTO> SortProductViews(string sortCondition, IEnumerable<ProductViewDTO> products)
+        {
+            IEnumerable<ProductViewDTO> filteredProducts;
+            if(sortCondition == "name")
+            {
+                filteredProducts = products.OrderBy(item => item.Name);
+            }
+            else if(sortCondition == "priceAsc")
+            {
+                filteredProducts = products.OrderBy(item => item.Price);
+            }
+            else if(sortCondition == "priceDesc")
+            {
+                filteredProducts = products.OrderByDescending(item => item.Price);
+            }
+            else
+            {
+                filteredProducts = products;
+            }
+
+            return filteredProducts;
         }
     }
 }

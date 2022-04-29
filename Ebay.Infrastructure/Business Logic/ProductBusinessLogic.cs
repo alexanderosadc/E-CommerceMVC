@@ -128,12 +128,15 @@ namespace Ebay.Infrastructure.Business_Logic
             
             var products = await _productRepository.GetAll();
             var productsCombined = GetCombinedListOfProducts(categoryId, discountId, products.ToList());
+            var productsViews = new List<ProductViewDTO>();
             // Products which exist in the list for 2 times are considered items which are both in discount and category
+
             if (productsCombined.Count > 0)
             {
-                var productsViews = GetProductsWithFinalPrice(productsCombined);
+                productsViews = GetProductsWithFinalPrice(productsCombined);
+            }
 
-                return new ProductViewListDTO
+            return new ProductViewListDTO
                 {
                     Products = productsViews,
                     PaginationInfo = new PagingInfo
@@ -143,9 +146,7 @@ namespace Ebay.Infrastructure.Business_Logic
                         CurrentPage = currentPageNumber,
                     }
                 };
-            }
-
-            return null;  
+            
         }
 
         public List<Product> GetProductsByCategoryId(int categoryId, List<Product> products)
@@ -373,6 +374,11 @@ namespace Ebay.Infrastructure.Business_Logic
             }
 
             return filteredProducts;
+        }
+
+        public IEnumerable<ProductViewDTO> SearchProductByName(string name, IEnumerable<ProductViewDTO> products)
+        {
+            return products.Where(item => item.Name.ToLower().Contains(name.ToLower()));
         }
     }
 }

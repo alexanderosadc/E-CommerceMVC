@@ -21,5 +21,6 @@ namespace Ebay.Infrastructure.Interfaces.AdminPresentation.ProductInterfaces
         public List<Product> GetCombinedListOfProducts(int? categoryId, int? discountId, List<Product> products);
         public List<ProductViewDTO> GetProductsWithFinalPrice(List<Product> products);
         public IEnumerable<ProductViewDTO> SortProductViews(string sortCondition, IEnumerable<ProductViewDTO> products);
+        public IEnumerable<ProductViewDTO> SearchProductByName(string name, IEnumerable<ProductViewDTO> products);
     }
 }
